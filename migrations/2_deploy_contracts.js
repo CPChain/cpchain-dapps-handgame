@@ -1,6 +1,6 @@
 // Deploy Example
-var Starter = artifacts.require("./Starter.sol");
+var Game = artifacts.require("./Game.sol");
 
 module.exports = function (deployer) {
-        deployer.deploy(Starter); //"参数在第二个变量携带"
+        deployer.deploy(Game); //"参数在第二个变量携带"
 };
