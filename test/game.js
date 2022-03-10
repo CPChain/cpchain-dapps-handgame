@@ -1,11 +1,11 @@
 const Game = artifacts.require("Game");
 const truffleAssert = require('truffle-assertions');
+const gasUsed = [0, 0, 0, 0, 0]
 contract("Test Game ", (accounts) => {
     it("should get contract params success for " + accounts[0], async () => {
         const instance = await Game.deployed()
         const maxLimit = await instance.maxLimit()
         const timeoutLimit = await instance.timeoutLimit()
-
         assert.equal(web3.utils.fromWei(maxLimit), 1000)
         assert.equal(timeoutLimit, 10 * 60)
     })
@@ -30,7 +30,8 @@ contract("Test Game ", (accounts) => {
         const maxLimit = await instance.maxLimit()
         const timeoutLimit = await instance.timeoutLimit()
         assert.equal(web3.utils.fromWei(maxLimit), 2000)
-        assert.equal(timeoutLimit, 5 * 60)
+        assert.equal(timeoutLimit, 5 * 60) 
+        gasUsed[0] = gasUsed[0] + result1.receipt.gasUsed + result2.receipt.gasUsed
     })
 
 
@@ -48,7 +49,8 @@ contract("Test Game ", (accounts) => {
         });
 
         const totalGameNumber = await instance.totalGameNumber()
-        assert.equal(totalGameNumber, 1)
+        assert.equal(totalGameNumber, 1) 
+        gasUsed[0] = gasUsed[0] + r.receipt.gasUsed
     })
 
     it("should join game success for" + accounts[1], async () => {
@@ -63,6 +65,8 @@ contract("Test Game ", (accounts) => {
                 web3.utils.toHex(ev[2]) == card &&
                 web3.utils.fromWei(ev[3]) == 5
         });
+
+        gasUsed[1] = gasUsed[1] + r.receipt.gasUsed
     })
     it("should open card success for" + accounts[1], async () => {
         const key = 'key2'
@@ -75,7 +79,22 @@ contract("Test Game ", (accounts) => {
                 ev[2] == key &&
                 ev[3] == content
         });
+
+        gasUsed[1] = gasUsed[1] + r.receipt.gasUsed
     })
+
+    it("should open card failed with wrong key or content" + accounts[0], async () => {
+        try {
+            const key = 'key'
+            const content = '3'
+            const instance = await Game.deployed()
+            await instance.openCard(0, key, content, { from: accounts[0] })
+            assert.fail()
+        } catch (error) {
+            assert.ok(error.toString().includes('wrong key or content'))
+        }
+    })
+
     it("should open card success and finish game for" + accounts[0], async () => {
         const key = 'key'
         const content = '1'
@@ -93,13 +112,11 @@ contract("Test Game ", (accounts) => {
             return ev[0] == 0 && ev[1] == -1
         });
 
+        gasUsed[0] = gasUsed[0] + r.receipt.gasUsed
+    })
 
-        const balance0 = await web3.eth.getBalance(accounts[0])
-        assert.ok(web3.utils.fromWei(balance0) < 100)
-
+    it(accounts[1] + " should win cpc", async () => {
         const balance1 = await web3.eth.getBalance(accounts[1])
-        assert.ok(web3.utils.fromWei(balance1) > 100)
-
-        console.log(balance0,balance1)
+        assert.ok(web3.utils.fromWei(new web3.utils.BN(gasUsed[1]).add(new web3.utils.BN(balance1))) == 105)
     })
 })

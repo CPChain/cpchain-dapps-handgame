@@ -50,7 +50,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     modifier onlyNotTimeout(uint256 gameId) {
-        require(!_isTimeout(gameId), "need game time out");
+        require(!_isTimeout(gameId), "game time out");
         _;
     }
 
@@ -148,7 +148,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         }
         // emit TestCard(card.card, key, content);
         bool validate = _validateCard(card.card, key, content);
-        require(validate, "wrong key and content");
+        require(validate, "wrong key or content");
         card.key = key;
         card.content = content;
 
