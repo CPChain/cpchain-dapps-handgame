@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0; 
+pragma solidity >=0.4.22 <0.9.0;
 
-interface IGame   {
+interface IGame {
     event SetMaxLimit(uint256 limit);
     event SetTimeoutLimit(uint256 limit);
     /**
@@ -20,12 +20,20 @@ interface IGame   {
     /**
      * Player joined, the game will be locked
      */
-    event GameLocked(uint256 gameId, address player, uint256 card);
+    event GameLocked(
+        uint256 gameId,
+        address player,
+        uint256 card,
+        uint256 amount
+    );
 
-    event GameFinished(uint256 gameId, address winner);
+    event CardOpend(uint256 gameId, address player, string key, uint8 content);
 
- 
+    event GameFinished(uint256 gameId, int8 result);
+
+    event TestCard(uint256 card, string key, uint8 content);
+
     function setMaxLimit(uint256 limit) external;
-    function setTimeoutLimit(uint256 limit) external;
 
+    function setTimeoutLimit(uint256 limit) external;
 }
