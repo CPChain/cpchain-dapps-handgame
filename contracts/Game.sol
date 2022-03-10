@@ -44,11 +44,22 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         _;
     }
 
+    modifier onlyTimeout(uint256 gameId) {
+        require(_isTimeout(gameId), "need game time out");
+        _;
+    }
+
+    modifier onlyNotTimeout(uint256 gameId) {
+        require(!_isTimeout(gameId), "need game time out");
+        _;
+    }
+
     modifier needGameStatus(uint256 gameId, int8 status) {
         require(games[gameId].status == status, "game status");
         _;
     }
 
+    // contract owner methods
     function setMaxLimit(uint256 limit) external onlyOwner {
         require(limit >= 1 ether);
         maxLimit = limit;
@@ -61,10 +72,12 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         emit SetTimeoutLimit(limit);
     }
 
+    // player methods
     function joinGame(uint256 gameId, uint256 card)
         external
         payable
         needGameStatus(gameId, 0)
+        onlyNotTimeout(gameId)
     {
         HandGame storage game = games[gameId];
 
@@ -86,7 +99,12 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         uint256 gameId,
         uint256 key,
         uint8 content
-    ) external onlyPlayer(gameId) needGameStatus(gameId, 1) {
+    )
+        external
+        onlyPlayer(gameId)
+        needGameStatus(gameId, 1)
+        onlyNotTimeout(gameId)
+    {
         HandGame storage game = games[gameId];
         GameCard storage card;
         if (game.starter == msg.sender) {
@@ -120,22 +138,22 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         external
         onlyPlayer(gameId)
         needGameStatus(gameId, 1)
+        onlyTimeout(gameId)
     {
         HandGame memory game = games[gameId];
-        if (_isTimeout(game)) {
-            GameCard memory starter = game.starterCard;
-            GameCard memory player = game.playerCard;
-            if (starter.content != 0) {
-                game.starter.transfer(game.amount);
-            } else if (player.content != 0) {
-                game.player.transfer(game.amount);
-            } else {
-                game.starter.transfer(game.amount / 2);
-                game.player.transfer(game.amount / 2);
-            }
+        GameCard memory starter = game.starterCard;
+        GameCard memory player = game.playerCard;
+        if (starter.content != 0) {
+            game.starter.transfer(game.amount);
+        } else if (player.content != 0) {
+            game.player.transfer(game.amount);
+        } else {
+            game.starter.transfer(game.amount / 2);
+            game.player.transfer(game.amount / 2);
         }
     }
 
+    // game starter methods
     function startGame(uint256 card) external payable {
         GameCard memory starter = GameCard(card, 0, 0);
         GameCard memory player = GameCard(0, 0, 0);
@@ -158,6 +176,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         external
         onlyStarter(gameId)
         needGameStatus(gameId, 0)
+        onlyTimeout(gameId)
     {
         HandGame storage game = games[gameId];
         game.status = -1;
@@ -166,7 +185,8 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     // private methods
-    function _isTimeout(HandGame memory game) private view returns (bool) {
+    function _isTimeout(uint256 gameId) private view returns (bool) {
+        HandGame memory game = games[gameId];
         return (game.timeout <= block.timestamp);
     }
 
