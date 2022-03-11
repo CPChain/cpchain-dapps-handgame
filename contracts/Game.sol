@@ -3,8 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
-import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
-
+import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol"; 
 contract Game is IGame, IStarter, IPlayer, Enable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
