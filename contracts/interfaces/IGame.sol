@@ -27,7 +27,7 @@ interface IGame {
         uint256 amount
     );
 
-    event CardOpend(uint256 gameId, address player, string key, uint8 content);
+    event CardOpened(uint256 gameId, address player, string key, uint8 content);
 
     event GameFinished(uint256 gameId, int8 result);
 

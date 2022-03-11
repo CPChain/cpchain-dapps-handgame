@@ -34,13 +34,13 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         require(
             games[gameId].starter == msg.sender ||
                 games[gameId].player == msg.sender,
-            "need game owner"
+            "need game player"
         );
         _;
     }
 
     modifier onlyStarter(uint256 gameId) {
-        require(games[gameId].starter == msg.sender, "need game owner");
+        require(games[gameId].starter == msg.sender, "need game starter");
         _;
     }
 
@@ -49,13 +49,18 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         _;
     }
 
-    modifier onlyNotTimeout(uint256 gameId) {
-        require(!_isTimeout(gameId), "game time out");
+    modifier onlyGameStarted(uint256 gameId) {
+        require(gameId < totalGameNumber, "wrong game id");
         _;
     }
 
     modifier needGameStatus(uint256 gameId, int8 status) {
-        require(games[gameId].status == status, "game status");
+        require(games[gameId].status == status, "wrong game status");
+        _;
+    }
+
+    modifier needCurrentContent(uint8 content) {
+        require(content < 4 && content > 0, "wrong content");
         _;
     }
 
@@ -67,9 +72,30 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     function setTimeoutLimit(uint256 limit) external onlyOwner {
-        require(limit >= 60 seconds);
         timeoutLimit = limit;
         emit SetTimeoutLimit(limit);
+    }
+
+    function viewGame(uint256 gameId)
+        external
+        view
+        onlyGameStarted(gameId)
+        returns (
+            uint256,
+            address,
+            address,
+            int8,
+            uint256
+        )
+    {
+        HandGame memory game = games[gameId];
+        return (
+            game.amount,
+            game.starter,
+            game.player,
+            game.status,
+            game.timeout
+        );
     }
 
     // game starter methods
@@ -88,13 +114,12 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         );
         totalGameNumber++;
         games.push(game);
-        // uint8 a = 1;
-        // uint256 card2 = uint256(keccak256(abi.encodePacked("key", a)));
         emit GameStarted(game.gameId, game.starter, card, msg.value);
     }
 
     function cancelGame(uint256 gameId)
         external
+        onlyGameStarted(gameId)
         onlyStarter(gameId)
         needGameStatus(gameId, 0)
         onlyTimeout(gameId)
@@ -109,16 +134,20 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     function joinGame(uint256 gameId, uint256 card)
         external
         payable
+        onlyGameStarted(gameId)
         needGameStatus(gameId, 0)
-        onlyNotTimeout(gameId)
     {
         HandGame storage game = games[gameId];
+        uint256 joinedAmount;
 
         GameCard memory playerCard = GameCard(card, "", 0);
-        require(msg.value >= game.amount);
+        require(msg.value >= game.amount, "wrong balance");
         // 退款
-        if (msg.value >= game.amount) {
+        if (msg.value > game.amount) {
             msg.sender.transfer(msg.value - game.amount);
+            joinedAmount = game.amount;
+        } else {
+            joinedAmount = msg.value;
         }
 
         game.player = msg.sender;
@@ -126,7 +155,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         game.amount = game.amount * 2;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
-        emit GameLocked(gameId, msg.sender, card, msg.value);
+        emit GameLocked(gameId, msg.sender, card, joinedAmount);
     }
 
     function openCard(
@@ -135,9 +164,10 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         uint8 content
     )
         external
+        onlyGameStarted(gameId)
         onlyPlayer(gameId)
         needGameStatus(gameId, 1)
-        onlyNotTimeout(gameId)
+        needCurrentContent(content)
     {
         HandGame storage game = games[gameId];
         GameCard storage card;
@@ -152,7 +182,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         card.key = key;
         card.content = content;
 
-        emit CardOpend(gameId, msg.sender, key, content);
+        emit CardOpened(gameId, msg.sender, key, content);
 
         if (game.starterCard.content != 0 && game.playerCard.content != 0) {
             int8 r = _winOrLose(
@@ -173,6 +203,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
 
     function timeoutGame(uint256 gameId)
         external
+        onlyGameStarted(gameId)
         onlyPlayer(gameId)
         needGameStatus(gameId, 1)
         onlyTimeout(gameId)
@@ -210,9 +241,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         returns (int8)
     {
         int8 r = int8(playerContent - otherContent);
-        if (r == 0) {
-            return r;
-        } else if (r == 1 || r == -2) {
+        if (r == 1 || r == -2) {
             return 1;
         } else if (r == -1 || r == 2) {
             return -1;
