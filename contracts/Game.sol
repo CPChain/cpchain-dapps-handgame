@@ -26,6 +26,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         GameCard starterCard;
         GameCard playerCard;
         uint256 timeout;
+        uint256 threshold;
     }
 
     HandGame[] public games;
@@ -66,7 +67,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
 
     // contract owner methods
     function setMaxLimit(uint256 limit) external onlyOwner {
-        require(limit >= 1 ether,'limit to low');
+        require(limit >= 1 ether, "limit to low");
         maxLimit = limit;
         emit SetMaxLimit(limit);
     }
@@ -99,7 +100,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     // game starter methods
-    function startGame(uint256 card) external payable {
+    function startGame(uint256 card, uint256 threshold) external payable {
         GameCard memory starter = GameCard(card, "", 0);
         GameCard memory player = GameCard(0, "", 0);
         HandGame memory game = HandGame(
@@ -110,7 +111,8 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
             0,
             starter,
             player,
-            block.timestamp + timeoutLimit
+            block.timestamp + timeoutLimit,
+            threshold
         );
         totalGameNumber++;
         games.push(game);
@@ -141,7 +143,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         uint256 joinedAmount;
 
         GameCard memory playerCard = GameCard(card, "", 0);
-        require(msg.value >= game.amount, "wrong balance");
+        require(msg.value >= game.threshold, "wrong balance");
         // 退款
         if (msg.value > game.amount) {
             msg.sender.transfer(msg.value - game.amount);

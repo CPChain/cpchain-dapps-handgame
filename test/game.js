@@ -42,11 +42,11 @@ contract("Test Game ", (accounts) => {
     it("should change contract params failed for owner", async () => {
         const instance = await Game.deployed()
         try {
-            await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(0.1))) 
+            await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(0.1)))
         } catch (error) {
             assert.ok(error.toString().includes('limit to low'))
         }
-      
+
     })
 
 
@@ -56,7 +56,7 @@ contract("Test Game ", (accounts) => {
         const content = '1'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
         const instance = await Game.deployed()
-        const r = await instance.startGame(card, { value: web3.utils.toWei(new web3.utils.BN(5)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(5)), { value: web3.utils.toWei(new web3.utils.BN(5)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == 0 &&
                 ev[1] == accounts[0] &&
@@ -141,7 +141,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_2'
         const content = '1'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { value: web3.utils.toWei(new web3.utils.BN(5)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(5)), { value: web3.utils.toWei(new web3.utils.BN(5)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == 1
         });
@@ -185,7 +185,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_2'
         const content = '1'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { value: web3.utils.toWei(new web3.utils.BN(5)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(5)), { value: web3.utils.toWei(new web3.utils.BN(5)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId &&
                 ev[1] == accounts[0] &&
@@ -207,8 +207,8 @@ contract("Test Game ", (accounts) => {
 
     it("should cancel game success for owner  ", async () => {
         const instance = await Game.deployed()
+        await sleep(5 * 1000)
         const c = await instance.cancelGame(gameId)
-        await sleep(10 * 1000)
         truffleAssert.eventEmitted(c, 'GameCancelled', (ev) => {
             return ev[0] == gameId
         });
@@ -230,7 +230,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '2'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(10)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId3 &&
                 ev[1] == accounts[2] &&
@@ -282,7 +282,6 @@ contract("Test Game ", (accounts) => {
 
         await sleep(1000)
         const r3 = await instance.openCard(gameId3, key3, content3, { from: accounts[3] })
-
         truffleAssert.eventEmitted(r3, 'CardOpened', (ev) => {
             return ev[0] == gameId3 &&
                 ev[1] == accounts[3] &&
@@ -305,7 +304,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '3'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(10)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId4 &&
                 ev[1] == accounts[2] &&
@@ -385,7 +384,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '3'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(10)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId5 &&
                 ev[1] == accounts[2] &&
@@ -408,7 +407,7 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 5", async () => {
         const instance = await Game.deployed()
-        await sleep(10 * 1000)
+        await sleep(5 * 1000)
         const r3 = await instance.timeoutGame(gameId5, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId5 && ev[1] == 0
@@ -422,7 +421,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '3'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(10)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId6 &&
                 ev[1] == accounts[2] &&
@@ -453,7 +452,7 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 6", async () => {
         const instance = await Game.deployed()
-        await sleep(10 * 1000)
+        await sleep(5 * 1000)
         const r3 = await instance.timeoutGame(gameId6, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId6 && ev[1] == 1
@@ -466,7 +465,7 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '3'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(10)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId7 &&
                 ev[1] == accounts[2] &&
@@ -497,10 +496,69 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 7", async () => {
         const instance = await Game.deployed()
-        await sleep(10 * 1000)
+        await sleep(5 * 1000)
         const r3 = await instance.timeoutGame(gameId7, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId7 && ev[1] == -1
+        });
+    })
+
+    // threshold
+    const gameId8 = 8
+    it("should start game 8 for " + accounts[2], async () => {
+        const instance = await Game.deployed()
+        const key = 'key_3'
+        const content = '3'
+        const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(8)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
+            return ev[0] == gameId8 &&
+                ev[1] == accounts[2] &&
+                web3.utils.toHex(ev[2]) == card &&
+                web3.utils.fromWei(ev[3]) == 10
+        });
+    })
+
+    it("should join game 8 failed for " + accounts[3], async () => {
+        try {
+            const key = 'key2_3'
+            const content = '2'
+            const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
+            const instance = await Game.deployed()
+            await instance.joinGame(gameId8, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(7)) })
+            assert.fail()
+
+        } catch (error) {
+            assert.ok(error.toString().includes('wrong balance'))
+        }
+    })
+
+    it("should join game 8 success for " + accounts[3], async () => {
+        const key = 'key2_3'
+        const content = '2'
+        const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
+        const instance = await Game.deployed()
+        const r = await instance.joinGame(gameId8, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(8)) })
+
+        truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
+            return ev[0] == gameId8
+        });
+    })
+
+    it("should open card for " + accounts[3], async () => {
+        const instance = await Game.deployed()
+        const key2 = 'key2_3'
+        const content2 = '2'
+        await instance.openCard(gameId8, key2, content2, { from: accounts[3] })
+    })
+
+
+    it("it is time out for game 8", async () => {
+        const instance = await Game.deployed()
+        await sleep(5 * 1000)
+        const r3 = await instance.timeoutGame(gameId8, { from: accounts[3] })
+        truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
+            return ev[0] == gameId8 && ev[1] == -1
         });
     })
 
