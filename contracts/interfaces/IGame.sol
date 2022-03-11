@@ -8,7 +8,7 @@ interface IGame {
      * Game started by starter,
      */
     event GameStarted(
-        uint256 gameId,
+        uint64 gameId,
         address starter,
         uint256 card,
         uint256 amount
@@ -16,20 +16,20 @@ interface IGame {
     /**
      * No other player join the game, starter cancel the game
      */
-    event GameCancelled(uint256 gameId);
+    event GameCancelled(uint64 gameId);
     /**
      * Player joined, the game will be locked
      */
     event GameLocked(
-        uint256 gameId,
+        uint64 gameId,
         address player,
         uint256 card,
         uint256 amount
     );
 
-    event CardOpened(uint256 gameId, address player, string key, uint8 content);
+    event CardOpened(uint64 gameId, address player, string key, uint8 content);
 
-    event GameFinished(uint256 gameId, int8 result);
+    event GameFinished(uint64 gameId, int8 result);
 
     event TestCard(uint256 card, string key, uint8 content);
 

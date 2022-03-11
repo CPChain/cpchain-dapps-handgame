@@ -8,7 +8,7 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Claimable.sol";
 contract Game is IGame, IStarter, IPlayer, Claimable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
-    uint256 public totalGameNumber = 0;
+    uint64 public totalGameNumber = 0;
 
     struct GameCard {
         uint256 card;
@@ -17,7 +17,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         uint8 content;
     }
     struct HandGame {
-        uint256 gameId;
+        uint64 gameId;
         uint256 amount;
         address starter;
         address player;
@@ -30,7 +30,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
 
     HandGame[] public games;
 
-    modifier onlyPlayer(uint256 gameId) {
+    modifier onlyPlayer(uint64 gameId) {
         require(
             games[gameId].starter == msg.sender ||
                 games[gameId].player == msg.sender,
@@ -39,22 +39,22 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         _;
     }
 
-    modifier onlyStarter(uint256 gameId) {
+    modifier onlyStarter(uint64 gameId) {
         require(games[gameId].starter == msg.sender, "need game starter");
         _;
     }
 
-    modifier onlyTimeout(uint256 gameId) {
+    modifier onlyTimeout(uint64 gameId) {
         require(_isTimeout(gameId), "need game time out");
         _;
     }
 
-    modifier onlyGameStarted(uint256 gameId) {
+    modifier onlyGameStarted(uint64 gameId) {
         require(gameId < totalGameNumber, "wrong game id");
         _;
     }
 
-    modifier needGameStatus(uint256 gameId, int8 status) {
+    modifier needGameStatus(uint64 gameId, int8 status) {
         require(games[gameId].status == status, "wrong game status");
         _;
     }
@@ -76,7 +76,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         emit SetTimeoutLimit(limit);
     }
 
-    function viewGame(uint256 gameId)
+    function viewGame(uint64 gameId)
         external
         view
         onlyGameStarted(gameId)
@@ -117,7 +117,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         emit GameStarted(game.gameId, game.starter, card, msg.value);
     }
 
-    function cancelGame(uint256 gameId)
+    function cancelGame(uint64 gameId)
         external
         onlyGameStarted(gameId)
         onlyStarter(gameId)
@@ -131,7 +131,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     // player methods
-    function joinGame(uint256 gameId, uint256 card)
+    function joinGame(uint64 gameId, uint256 card)
         external
         payable
         onlyGameStarted(gameId)
@@ -159,7 +159,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     function openCard(
-        uint256 gameId,
+        uint64 gameId,
         string key,
         uint8 content
     )
@@ -201,7 +201,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         }
     }
 
-    function timeoutGame(uint256 gameId)
+    function timeoutGame(uint64 gameId)
         external
         onlyGameStarted(gameId)
         onlyPlayer(gameId)
@@ -225,7 +225,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     // private methods
-    function _isTimeout(uint256 gameId) private view returns (bool) {
+    function _isTimeout(uint64 gameId) private view returns (bool) {
         HandGame memory game = games[gameId];
         return (game.timeout <= block.timestamp);
     }
