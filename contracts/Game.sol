@@ -66,7 +66,7 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
 
     // contract owner methods
     function setMaxLimit(uint256 limit) external onlyOwner {
-        require(limit >= 1 ether);
+        require(limit >= 1 ether,'limit to low');
         maxLimit = limit;
         emit SetMaxLimit(limit);
     }
@@ -213,11 +213,14 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
         GameCard memory player = game.playerCard;
         if (starter.content != 0) {
             game.starter.transfer(game.amount);
+            emit GameFinished(gameId, 1);
         } else if (player.content != 0) {
             game.player.transfer(game.amount);
+            emit GameFinished(gameId, -1);
         } else {
             game.starter.transfer(game.amount / 2);
             game.player.transfer(game.amount / 2);
+            emit GameFinished(gameId, 0);
         }
     }
 
