@@ -3,9 +3,9 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
-import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Claimable.sol";
+import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
-contract Game is IGame, IStarter, IPlayer, Claimable {
+contract Game is IGame, IStarter, IPlayer, Enable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
@@ -100,7 +100,11 @@ contract Game is IGame, IStarter, IPlayer, Claimable {
     }
 
     // game starter methods
-    function startGame(uint256 card, uint256 threshold) external payable {
+    function startGame(uint256 card, uint256 threshold)
+        external
+        payable
+        onlyEnabled
+    {
         GameCard memory starter = GameCard(card, "", 0);
         GameCard memory player = GameCard(0, "", 0);
         HandGame memory game = HandGame(
