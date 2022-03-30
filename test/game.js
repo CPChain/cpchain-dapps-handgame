@@ -562,5 +562,25 @@ contract("Test Game ", (accounts) => {
         });
     })
 
+
+    it("should get lastest games failed for limit is too high", async () => {
+        const instance = await Game.deployed()
+        try {
+            await instance.viewLatestGames(100)
+            assert.fail()
+        } catch (error) {
+            assert.ok(error.toString().includes('limit is too high'))
+        }
+    })
+
+    it("should get lastest 2 games", async () => {
+        const instance = await Game.deployed()
+        const games = await instance.viewLatestGames(2)
+        console.log(games)
+        assert.ok(games.length == 2 * 6)
+
+    })
+
+
 })
 

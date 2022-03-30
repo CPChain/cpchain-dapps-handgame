@@ -3,11 +3,13 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
-import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol"; 
+import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
+
 contract Game is IGame, IStarter, IPlayer, Enable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
+    uint32 public viewCountLimit = 10;
 
     struct GameCard {
         uint256 card;
@@ -74,8 +76,9 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     function setTimeoutLimit(uint256 limit) external onlyOwner {
         timeoutLimit = limit;
         emit SetTimeoutLimit(limit);
-    }
+    } 
 
+    // view
     function viewGame(uint64 gameId)
         external
         view
@@ -96,6 +99,25 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             game.status,
             game.timeout
         );
+    }
+
+    /**
+     */
+    function viewLatestGames(uint64 limit) external view returns (uint256[]) {
+        require(limit <= viewCountLimit, "limit is too high");
+        uint64 count = limit > totalGameNumber ? totalGameNumber : limit;
+        uint256[] memory _lastestGames = new uint256[](count * 6);
+        for (uint64 i = 0; i < count; i++) {
+            HandGame memory game = games[totalGameNumber - i - 1];
+            _lastestGames[i * 6 + 0] = uint256(game.gameId);
+            _lastestGames[i * 6 + 1] = game.amount;
+            _lastestGames[i * 6 + 2] = uint256(game.starter);
+            _lastestGames[i * 6 + 3] = uint256(game.player);
+            _lastestGames[i * 6 + 4] = uint256(game.player);
+            _lastestGames[i * 6 + 5] = game.timeout;
+        }
+
+        return (_lastestGames);
     }
 
     // game starter methods
