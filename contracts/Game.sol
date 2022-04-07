@@ -89,7 +89,13 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             address,
             address,
             int8,
-            uint256
+            uint256,
+            uint256,
+            string,
+            uint8,
+            uint256,
+            string,
+            uint8
         )
     {
         HandGame memory game = games[gameId];
@@ -99,7 +105,13 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             game.starter,
             game.player,
             game.status,
-            game.timeout
+            game.timeout,
+            game.starterCard.card,
+            game.starterCard.key,
+            game.starterCard.content,
+            game.playerCard.card,
+            game.playerCard.key,
+            game.playerCard.content
         );
     }
 
