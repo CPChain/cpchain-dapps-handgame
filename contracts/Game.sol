@@ -76,7 +76,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     function setTimeoutLimit(uint256 limit) external onlyOwner {
         timeoutLimit = limit;
         emit SetTimeoutLimit(limit);
-    } 
+    }
 
     // view
     function viewGame(uint64 gameId)
@@ -84,6 +84,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         view
         onlyGameStarted(gameId)
         returns (
+            uint256,
             uint256,
             address,
             address,
@@ -94,6 +95,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         HandGame memory game = games[gameId];
         return (
             game.amount,
+            game.threshold,
             game.starter,
             game.player,
             game.status,
@@ -106,15 +108,16 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     function viewLatestGames(uint64 limit) external view returns (uint256[]) {
         require(limit <= viewCountLimit, "limit is too high");
         uint64 count = limit > totalGameNumber ? totalGameNumber : limit;
-        uint256[] memory _lastestGames = new uint256[](count * 6);
+        uint256[] memory _lastestGames = new uint256[](count * 7);
         for (uint64 i = 0; i < count; i++) {
             HandGame memory game = games[totalGameNumber - i - 1];
-            _lastestGames[i * 6 + 0] = uint256(game.gameId);
-            _lastestGames[i * 6 + 1] = game.amount;
-            _lastestGames[i * 6 + 2] = uint256(game.starter);
-            _lastestGames[i * 6 + 3] = uint256(game.player);
-            _lastestGames[i * 6 + 4] = uint256(game.player);
-            _lastestGames[i * 6 + 5] = game.timeout;
+            _lastestGames[i * 7 + 0] = uint256(game.gameId);
+            _lastestGames[i * 7 + 1] = game.amount;
+            _lastestGames[i * 7 + 2] = game.threshold;
+            _lastestGames[i * 7 + 3] = uint256(game.starter);
+            _lastestGames[i * 7 + 4] = uint256(game.player);
+            _lastestGames[i * 7 + 5] = uint256(game.status);
+            _lastestGames[i * 7 + 6] = game.timeout;
         }
 
         return (_lastestGames);
@@ -203,7 +206,6 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         } else {
             card = game.playerCard;
         }
-        // emit TestCard(card.card, key, content);
         bool validate = _validateCard(card.card, key, content);
         require(validate, "wrong key or content");
         card.key = key;

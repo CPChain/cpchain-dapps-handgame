@@ -8,7 +8,7 @@ interface IGame {
      * Game started by starter,
      */
     event GameStarted(
-        uint64 gameId,
+        uint64 indexed gameId,
         address starter,
         uint256 card,
         uint256 amount
@@ -16,22 +16,25 @@ interface IGame {
     /**
      * No other player join the game, starter cancel the game
      */
-    event GameCancelled(uint64 gameId);
+    event GameCancelled(uint64 indexed gameId);
     /**
      * Player joined, the game will be locked
      */
     event GameLocked(
-        uint64 gameId,
+        uint64 indexed gameId,
         address player,
         uint256 card,
         uint256 amount
     );
 
-    event CardOpened(uint64 gameId, address player, string key, uint8 content);
+    event CardOpened(
+        uint64 indexed gameId,
+        address player,
+        string key,
+        uint8 content
+    );
 
-    event GameFinished(uint64 gameId, int8 result);
-
-    event TestCard(uint256 card, string key, uint8 content);
+    event GameFinished(uint64 indexed gameId, int8 result);
 
     function setMaxLimit(uint256 limit) external;
 
