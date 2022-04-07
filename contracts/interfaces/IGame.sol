@@ -11,7 +11,8 @@ interface IGame {
         uint64 indexed gameId,
         address starter,
         uint256 card,
-        uint256 amount
+        uint256 amount,
+        uint256 threshold
     );
     /**
      * No other player join the game, starter cancel the game

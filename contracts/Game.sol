@@ -144,7 +144,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         );
         totalGameNumber++;
         games.push(game);
-        emit GameStarted(game.gameId, game.starter, card, msg.value);
+        emit GameStarted(game.gameId, game.starter, card, msg.value, threshold);
     }
 
     function cancelGame(uint64 gameId)
