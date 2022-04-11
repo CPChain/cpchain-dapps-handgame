@@ -22,8 +22,8 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         uint256 amount;
         address starter;
         address player;
-        //-1 cancel,0 started, 1 locked,2,finished
-        int8 status;
+        //0 started, 1 locked,2,finished,3 cancel,
+        uint8 status;
         GameCard starterCard;
         GameCard playerCard;
         uint256 timeout;
@@ -56,7 +56,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         _;
     }
 
-    modifier needGameStatus(uint64 gameId, int8 status) {
+    modifier needGameStatus(uint64 gameId, uint8 status) {
         require(games[gameId].status == status, "wrong game status");
         _;
     }
@@ -88,7 +88,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             uint256,
             address,
             address,
-            int8,
+            uint8,
             uint256,
             uint256,
             string,
@@ -116,6 +116,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     }
 
     /**
+     * view the lastest
      */
     function viewLatestGames(uint64 limit) external view returns (uint256[]) {
         require(limit <= viewCountLimit, "limit is too high");
@@ -167,7 +168,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         onlyTimeout(gameId)
     {
         HandGame storage game = games[gameId];
-        game.status = -1;
+        game.status = 3;
         msg.sender.transfer(game.amount);
         emit GameCancelled(gameId);
     }
