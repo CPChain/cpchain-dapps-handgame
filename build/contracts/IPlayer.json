@@ -49,7 +49,7 @@
           "type": "uint64"
         }
       ],
-      "name": "finshGame",
+      "name": "finishGame",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -61,7 +61,7 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IPlayer {\n    function joinGame(uint64 gameId, uint256 card) external payable;\n\n    function openCard(uint64 gameId,string key, uint8 content) external;\n\n    function finshGame(uint64 gameId) external;\n}\n",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IPlayer {\n    function joinGame(uint64 gameId, uint256 card) external payable;\n\n    function openCard(uint64 gameId,string key, uint8 content) external;\n\n    function finishGame(uint64 gameId) external;\n}\n",
   "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IPlayer.sol",
   "ast": {
     "absolutePath": "project:/contracts/interfaces/IPlayer.sol",
@@ -298,7 +298,7 @@
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "finshGame",
+            "name": "finishGame",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 1259,
@@ -310,7 +310,7 @@
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
                   "scope": 1261,
-                  "src": "253:13:5",
+                  "src": "254:13:5",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -321,7 +321,7 @@
                     "id": 1257,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "253:6:5",
+                    "src": "254:6:5",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -331,27 +331,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "252:15:5"
+              "src": "253:15:5"
             },
             "payable": false,
             "returnParameters": {
               "id": 1260,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "276:0:5"
+              "src": "277:0:5"
             },
             "scope": 1262,
-            "src": "234:43:5",
+            "src": "234:44:5",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
         "scope": 1263,
-        "src": "66:213:5"
+        "src": "66:214:5"
       }
     ],
-    "src": "32:248:5"
+    "src": "32:249:5"
   },
   "legacyAST": {
     "attributes": {
@@ -619,7 +619,7 @@
               "modifiers": [
                 null
               ],
-              "name": "finshGame",
+              "name": "finishGame",
               "payable": false,
               "scope": 1262,
               "stateMutability": "nonpayable",
@@ -648,17 +648,17 @@
                         },
                         "id": 1257,
                         "name": "ElementaryTypeName",
-                        "src": "253:6:5"
+                        "src": "254:6:5"
                       }
                     ],
                     "id": 1258,
                     "name": "VariableDeclaration",
-                    "src": "253:13:5"
+                    "src": "254:13:5"
                   }
                 ],
                 "id": 1259,
                 "name": "ParameterList",
-                "src": "252:15:5"
+                "src": "253:15:5"
               },
               {
                 "attributes": {
@@ -669,22 +669,22 @@
                 "children": [],
                 "id": 1260,
                 "name": "ParameterList",
-                "src": "276:0:5"
+                "src": "277:0:5"
               }
             ],
             "id": 1261,
             "name": "FunctionDefinition",
-            "src": "234:43:5"
+            "src": "234:44:5"
           }
         ],
         "id": 1262,
         "name": "ContractDefinition",
-        "src": "66:213:5"
+        "src": "66:214:5"
       }
     ],
     "id": 1263,
     "name": "SourceUnit",
-    "src": "32:248:5"
+    "src": "32:249:5"
   },
   "compiler": {
     "name": "solc",
@@ -692,7 +692,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-12T09:55:07.376Z",
+  "updatedAt": "2022-04-12T10:01:35.058Z",
   "devdoc": {
     "methods": {}
   },

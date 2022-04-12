@@ -243,7 +243,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         }
     }
 
-    function finshGame(uint64 gameId)
+    function finishGame(uint64 gameId)
         external
         onlyGameStarted(gameId)
         onlyPlayer(gameId)

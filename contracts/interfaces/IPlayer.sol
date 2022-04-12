@@ -6,5 +6,5 @@ interface IPlayer {
 
     function openCard(uint64 gameId,string key, uint8 content) external;
 
-    function finshGame(uint64 gameId) external;
+    function finishGame(uint64 gameId) external;
 }

@@ -408,7 +408,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 5", async () => {
         const instance = await Game.deployed()
         await sleep(5 * 1000)
-        const r3 = await instance.finshGame(gameId5, { from: accounts[3] })
+        const r3 = await instance.finishGame(gameId5, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId5 && ev[1] == 0
         });
@@ -453,7 +453,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 6", async () => {
         const instance = await Game.deployed()
         await sleep(5 * 1000)
-        const r3 = await instance.finshGame(gameId6, { from: accounts[3] })
+        const r3 = await instance.finishGame(gameId6, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId6 && ev[1] == 1
         });
@@ -497,7 +497,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 7", async () => {
         const instance = await Game.deployed()
         await sleep(5 * 1000)
-        const r3 = await instance.finshGame(gameId7, { from: accounts[3] })
+        const r3 = await instance.finishGame(gameId7, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId7 && ev[1] == -1
         });
@@ -556,7 +556,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 8", async () => {
         const instance = await Game.deployed()
         await sleep(5 * 1000)
-        const r3 = await instance.finshGame(gameId8, { from: accounts[3] })
+        const r3 = await instance.finishGame(gameId8, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId8 && ev[1] == -1
         });
