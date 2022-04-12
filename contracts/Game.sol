@@ -243,7 +243,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         }
     }
 
-    function timeoutGame(uint64 gameId)
+    function finshGame(uint64 gameId)
         external
         onlyGameStarted(gameId)
         onlyPlayer(gameId)
@@ -264,6 +264,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             game.player.transfer(game.amount / 2);
             emit GameFinished(gameId, 0);
         }
+        game.status = 2;
     }
 
     // private methods
