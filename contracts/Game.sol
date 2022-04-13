@@ -181,24 +181,20 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         needGameStatus(gameId, 0)
     {
         HandGame storage game = games[gameId];
-        uint256 joinedAmount;
 
         GameCard memory playerCard = GameCard(card, "", 0);
         require(msg.value >= game.threshold, "wrong balance");
         // 退款
-        if (msg.value > game.amount) {
-            msg.sender.transfer(msg.value - game.amount);
-            joinedAmount = game.amount;
-        } else {
-            joinedAmount = msg.value;
+        if (msg.value > game.threshold) {
+            msg.sender.transfer(msg.value - game.threshold);
         }
 
         game.player = msg.sender;
         game.playerCard = playerCard;
-        game.amount = game.amount * 2;
+        game.amount = game.amount + game.threshold;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
-        emit GameLocked(gameId, msg.sender, card, joinedAmount);
+        emit GameLocked(gameId, msg.sender, card, game.threshold);
     }
 
     function openCard(

@@ -511,12 +511,13 @@ contract("Test Game ", (accounts) => {
         const key = 'key_3'
         const content = '3'
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
-        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(8)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(10)) })
+        const r = await instance.startGame(card, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(50)) })
         truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
             return ev[0] == gameId8 &&
                 ev[1] == accounts[2] &&
                 web3.utils.toHex(ev[2]) == card &&
-                web3.utils.fromWei(ev[3]) == 10
+                web3.utils.fromWei(ev[3]) == 50 &&
+                web3.utils.fromWei(ev[4]) == 5
         });
     })
 
@@ -526,8 +527,8 @@ contract("Test Game ", (accounts) => {
             const content = '2'
             const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
             const instance = await Game.deployed()
-            await instance.joinGame(gameId8, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(7)) })
-            assert.fail()
+            await instance.joinGame(gameId8, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(4)) })
+
 
         } catch (error) {
             assert.ok(error.toString().includes('wrong balance'))
@@ -544,6 +545,8 @@ contract("Test Game ", (accounts) => {
         truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
             return ev[0] == gameId8
         });
+        const game = await instance.viewGame(gameId8)
+
     })
 
     it("should open card for " + accounts[3], async () => {
@@ -551,6 +554,7 @@ contract("Test Game ", (accounts) => {
         const key2 = 'key2_3'
         const content2 = '2'
         await instance.openCard(gameId8, key2, content2, { from: accounts[3] })
+
     })
 
 
