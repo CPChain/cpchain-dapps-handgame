@@ -122,7 +122,8 @@ contract("Test Game ", (accounts) => {
                 ev[2] == key &&
                 ev[3] == content
         });
-
+        const game = await instance.viewGame(0)
+        assert.ok(game[4] == 2)
         truffleAssert.eventEmitted(r, 'GameFinished', (ev) => {
             //  1 rock   2 paper starter should lose
             return ev[0] == 0 && ev[1] == -1

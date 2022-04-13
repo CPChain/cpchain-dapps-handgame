@@ -239,6 +239,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
                 game.starter.transfer(game.amount / 2);
                 game.player.transfer(game.amount / 2);
             }
+            game.status = 2;
             emit GameFinished(gameId, r);
         }
     }
@@ -250,7 +251,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         needGameStatus(gameId, 1)
         onlyTimeout(gameId)
     {
-        HandGame memory game = games[gameId];
+        HandGame storage game = games[gameId];
         GameCard memory starter = game.starterCard;
         GameCard memory player = game.playerCard;
         if (starter.content != 0) {
