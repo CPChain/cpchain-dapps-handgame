@@ -4,9 +4,7 @@ const gasUsed = [0, 0, 0, 0, 0]
 const sleep = time => {
     return new Promise(resolve => setTimeout(resolve, time));
 };
-
 contract("Test Game ", (accounts) => {
-
     it("should get contract params success for " + accounts[0], async () => {
         const instance = await Game.deployed()
         const maxLimit = await instance.maxLimit()
@@ -14,31 +12,27 @@ contract("Test Game ", (accounts) => {
         assert.equal(web3.utils.fromWei(maxLimit), 1000)
         assert.equal(timeoutLimit, 10 * 60)
     })
-
     it("contract game number should be 0", async () => {
         const instance = await Game.deployed()
         const totalGameNumber = await instance.totalGameNumber()
         assert.equal(totalGameNumber, 0)
     })
-
-
     it("should change contract params success for owner", async () => {
         const instance = await Game.deployed()
         const result1 = await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(2000)))
-        const result2 = await instance.setTimeoutLimit(5 * 60)
+        const result2 = await instance.setTimeoutLimit(5)
         truffleAssert.eventEmitted(result1, 'SetMaxLimit', (ev) => {
             return web3.utils.fromWei(ev.limit) == 2000
         });
         truffleAssert.eventEmitted(result2, 'SetTimeoutLimit', (ev) => {
-            return ev.limit == 5 * 60
+            return ev.limit == 5
         });
         const maxLimit = await instance.maxLimit()
         const timeoutLimit = await instance.timeoutLimit()
         assert.equal(web3.utils.fromWei(maxLimit), 2000)
-        assert.equal(timeoutLimit, 5 * 60)
+        assert.equal(timeoutLimit, 5)
         gasUsed[0] = gasUsed[0] + result1.receipt.gasUsed + result2.receipt.gasUsed
     })
-
     it("should change contract params failed for owner", async () => {
         const instance = await Game.deployed()
         try {
@@ -46,11 +40,7 @@ contract("Test Game ", (accounts) => {
         } catch (error) {
             assert.ok(error.toString().includes('limit to low'))
         }
-
     })
-
-
-
     it("should start game success for" + accounts[0], async () => {
         const key = 'key'
         const content = '1'
@@ -63,12 +53,10 @@ contract("Test Game ", (accounts) => {
                 web3.utils.toHex(ev[2]) == card &&
                 web3.utils.fromWei(ev[3]) == 5
         });
-
         const totalGameNumber = await instance.totalGameNumber()
         assert.equal(totalGameNumber, 1)
         gasUsed[0] = gasUsed[0] + r.receipt.gasUsed
     })
-
     it("should join game success for" + accounts[1], async () => {
         const key = 'key2'
         const content = '2'
@@ -175,9 +163,9 @@ contract("Test Game ", (accounts) => {
 
     it("should change contract timeout success for owner", async () => {
         const instance = await Game.deployed()
-        const result = await instance.setTimeoutLimit(1)
+        const result = await instance.setTimeoutLimit(4)
         truffleAssert.eventEmitted(result, 'SetTimeoutLimit', (ev) => {
-            return ev.limit == 1
+            return ev.limit == 4
         });
     })
     let gameId = 2
@@ -208,7 +196,7 @@ contract("Test Game ", (accounts) => {
 
     it("should cancel game success for owner  ", async () => {
         const instance = await Game.deployed()
-        await sleep(5 * 1000)
+        await sleep(15 * 1000)
         const c = await instance.cancelGame(gameId)
         truffleAssert.eventEmitted(c, 'GameCancelled', (ev) => {
             return ev[0] == gameId
@@ -260,7 +248,6 @@ contract("Test Game ", (accounts) => {
         const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
         const instance = await Game.deployed()
         const r = await instance.joinGame(gameId3, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(15)) })
-
         truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
             return ev[0] == gameId3
         });
@@ -408,11 +395,13 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 5", async () => {
         const instance = await Game.deployed()
-        await sleep(5 * 1000)
+        await sleep(15 * 1000)
+
         const r3 = await instance.finishGame(gameId5, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId5 && ev[1] == 0
         });
+
     })
 
 
@@ -453,7 +442,7 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 6", async () => {
         const instance = await Game.deployed()
-        await sleep(5 * 1000)
+        await sleep(15 * 1000)
         const r3 = await instance.finishGame(gameId6, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId6 && ev[1] == 1
@@ -497,7 +486,7 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 7", async () => {
         const instance = await Game.deployed()
-        await sleep(5 * 1000)
+        await sleep(15 * 1000)
         const r3 = await instance.finishGame(gameId7, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId7 && ev[1] == -1
@@ -560,7 +549,7 @@ contract("Test Game ", (accounts) => {
 
     it("it is time out for game 8", async () => {
         const instance = await Game.deployed()
-        await sleep(5 * 1000)
+        await sleep(15 * 1000)
         const r3 = await instance.finishGame(gameId8, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId8 && ev[1] == -1

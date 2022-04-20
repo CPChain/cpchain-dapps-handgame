@@ -51,6 +51,11 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         _;
     }
 
+    modifier notTimeout(uint64 gameId) {
+        require(!_isTimeout(gameId), "time is out");
+        _;
+    }
+
     modifier onlyGameStarted(uint64 gameId) {
         require(gameId < totalGameNumber, "wrong game id");
         _;
@@ -179,6 +184,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         payable
         onlyGameStarted(gameId)
         needGameStatus(gameId, 0)
+        notTimeout(gameId)
     {
         HandGame storage game = games[gameId];
 
