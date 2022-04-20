@@ -5,7 +5,7 @@
         "test:coverage": "truffle run coverage"
     },
     "dependencies": {
-        "@cpchain-tools/cpchain-dapps-utils": "0.0.4",
+        "@cpchain-tools/cpchain-dapps-utils": "0.0.5",
         "solidity-coverage": "^0.7.16",
         "truffle": "^5.3.2",
         "truffle-assertions": "^0.9.2",
