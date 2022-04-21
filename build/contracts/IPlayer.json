@@ -49,7 +49,7 @@
           "type": "uint64"
         }
       ],
-      "name": "finishGame",
+      "name": "finishTimeoutGame",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -61,20 +61,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IPlayer {\n    function joinGame(uint64 gameId, uint256 card) external payable;\n\n    function openCard(uint64 gameId,string key, uint8 content) external;\n\n    function finishGame(uint64 gameId) external;\n}\n",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IPlayer {\n    function joinGame(uint64 gameId, uint256 card) external payable;\n\n    function openCard(uint64 gameId,string key, uint8 content) external;\n\n    function finishTimeoutGame(uint64 gameId) external;\n}\n",
   "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IPlayer.sol",
   "ast": {
     "absolutePath": "project:/contracts/interfaces/IPlayer.sol",
     "exportedSymbols": {
       "IPlayer": [
-        1262
+        2051
       ]
     },
-    "id": 1263,
+    "id": 2052,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1240,
+        "id": 2029,
         "literals": [
           "solidity",
           ">=",
@@ -85,7 +85,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:5"
+        "src": "32:32:8"
       },
       {
         "baseContracts": [],
@@ -93,9 +93,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1262,
+        "id": 2051,
         "linearizedBaseContracts": [
-          1262
+          2051
         ],
         "name": "IPlayer",
         "nodeType": "ContractDefinition",
@@ -103,7 +103,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1247,
+            "id": 2036,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -111,16 +111,16 @@
             "name": "joinGame",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1245,
+              "id": 2034,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1242,
+                  "id": 2031,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1247,
-                  "src": "108:13:5",
+                  "scope": 2036,
+                  "src": "108:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -128,10 +128,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 1241,
+                    "id": 2030,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "108:6:5",
+                    "src": "108:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -142,11 +142,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1244,
+                  "id": 2033,
                   "name": "card",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1247,
-                  "src": "123:12:5",
+                  "scope": 2036,
+                  "src": "123:12:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -154,10 +154,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1243,
+                    "id": 2032,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "123:7:5",
+                    "src": "123:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -167,17 +167,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "107:29:5"
+              "src": "107:29:8"
             },
             "payable": true,
             "returnParameters": {
-              "id": 1246,
+              "id": 2035,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "153:0:5"
+              "src": "153:0:8"
             },
-            "scope": 1262,
-            "src": "90:64:5",
+            "scope": 2051,
+            "src": "90:64:8",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "external"
@@ -185,7 +185,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1256,
+            "id": 2045,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -193,16 +193,16 @@
             "name": "openCard",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1254,
+              "id": 2043,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1249,
+                  "id": 2038,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1256,
-                  "src": "178:13:5",
+                  "scope": 2045,
+                  "src": "178:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -210,10 +210,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 1248,
+                    "id": 2037,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "178:6:5",
+                    "src": "178:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -224,11 +224,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1251,
+                  "id": 2040,
                   "name": "key",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1256,
-                  "src": "192:10:5",
+                  "scope": 2045,
+                  "src": "192:10:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -236,10 +236,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 1250,
+                    "id": 2039,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "192:6:5",
+                    "src": "192:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -250,11 +250,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 1253,
+                  "id": 2042,
                   "name": "content",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1256,
-                  "src": "204:13:5",
+                  "scope": 2045,
+                  "src": "204:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -262,10 +262,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1252,
+                    "id": 2041,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "204:5:5",
+                    "src": "204:5:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -275,17 +275,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "177:41:5"
+              "src": "177:41:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1255,
+              "id": 2044,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "227:0:5"
+              "src": "227:0:8"
             },
-            "scope": 1262,
-            "src": "160:68:5",
+            "scope": 2051,
+            "src": "160:68:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -293,24 +293,24 @@
           {
             "body": null,
             "documentation": null,
-            "id": 1261,
+            "id": 2050,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "finishGame",
+            "name": "finishTimeoutGame",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1259,
+              "id": 2048,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1258,
+                  "id": 2047,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1261,
-                  "src": "254:13:5",
+                  "scope": 2050,
+                  "src": "261:13:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -318,10 +318,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 1257,
+                    "id": 2046,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "254:6:5",
+                    "src": "261:6:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -331,34 +331,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "253:15:5"
+              "src": "260:15:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1260,
+              "id": 2049,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "277:0:5"
+              "src": "284:0:8"
             },
-            "scope": 1262,
-            "src": "234:44:5",
+            "scope": 2051,
+            "src": "234:51:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1263,
-        "src": "66:214:5"
+        "scope": 2052,
+        "src": "66:221:8"
       }
     ],
-    "src": "32:249:5"
+    "src": "32:256:8"
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "project:/contracts/interfaces/IPlayer.sol",
       "exportedSymbols": {
         "IPlayer": [
-          1262
+          2051
         ]
       }
     },
@@ -375,9 +375,9 @@
             ".0"
           ]
         },
-        "id": 1240,
+        "id": 2029,
         "name": "PragmaDirective",
-        "src": "32:32:5"
+        "src": "32:32:8"
       },
       {
         "attributes": {
@@ -391,10 +391,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            1262
+            2051
           ],
           "name": "IPlayer",
-          "scope": 1263
+          "scope": 2052
         },
         "children": [
           {
@@ -409,7 +409,7 @@
               ],
               "name": "joinGame",
               "payable": true,
-              "scope": 1262,
+              "scope": 2051,
               "stateMutability": "payable",
               "superFunction": null,
               "visibility": "external"
@@ -421,7 +421,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "gameId",
-                      "scope": 1247,
+                      "scope": 2036,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -434,20 +434,20 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 1241,
+                        "id": 2030,
                         "name": "ElementaryTypeName",
-                        "src": "108:6:5"
+                        "src": "108:6:8"
                       }
                     ],
-                    "id": 1242,
+                    "id": 2031,
                     "name": "VariableDeclaration",
-                    "src": "108:13:5"
+                    "src": "108:13:8"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "card",
-                      "scope": 1247,
+                      "scope": 2036,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -460,19 +460,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 1243,
+                        "id": 2032,
                         "name": "ElementaryTypeName",
-                        "src": "123:7:5"
+                        "src": "123:7:8"
                       }
                     ],
-                    "id": 1244,
+                    "id": 2033,
                     "name": "VariableDeclaration",
-                    "src": "123:12:5"
+                    "src": "123:12:8"
                   }
                 ],
-                "id": 1245,
+                "id": 2034,
                 "name": "ParameterList",
-                "src": "107:29:5"
+                "src": "107:29:8"
               },
               {
                 "attributes": {
@@ -481,14 +481,14 @@
                   ]
                 },
                 "children": [],
-                "id": 1246,
+                "id": 2035,
                 "name": "ParameterList",
-                "src": "153:0:5"
+                "src": "153:0:8"
               }
             ],
-            "id": 1247,
+            "id": 2036,
             "name": "FunctionDefinition",
-            "src": "90:64:5"
+            "src": "90:64:8"
           },
           {
             "attributes": {
@@ -502,7 +502,7 @@
               ],
               "name": "openCard",
               "payable": false,
-              "scope": 1262,
+              "scope": 2051,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -514,7 +514,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "gameId",
-                      "scope": 1256,
+                      "scope": 2045,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -527,20 +527,20 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 1248,
+                        "id": 2037,
                         "name": "ElementaryTypeName",
-                        "src": "178:6:5"
+                        "src": "178:6:8"
                       }
                     ],
-                    "id": 1249,
+                    "id": 2038,
                     "name": "VariableDeclaration",
-                    "src": "178:13:5"
+                    "src": "178:13:8"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "key",
-                      "scope": 1256,
+                      "scope": 2045,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "string",
@@ -553,20 +553,20 @@
                           "name": "string",
                           "type": "string"
                         },
-                        "id": 1250,
+                        "id": 2039,
                         "name": "ElementaryTypeName",
-                        "src": "192:6:5"
+                        "src": "192:6:8"
                       }
                     ],
-                    "id": 1251,
+                    "id": 2040,
                     "name": "VariableDeclaration",
-                    "src": "192:10:5"
+                    "src": "192:10:8"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "content",
-                      "scope": 1256,
+                      "scope": 2045,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint8",
@@ -579,19 +579,19 @@
                           "name": "uint8",
                           "type": "uint8"
                         },
-                        "id": 1252,
+                        "id": 2041,
                         "name": "ElementaryTypeName",
-                        "src": "204:5:5"
+                        "src": "204:5:8"
                       }
                     ],
-                    "id": 1253,
+                    "id": 2042,
                     "name": "VariableDeclaration",
-                    "src": "204:13:5"
+                    "src": "204:13:8"
                   }
                 ],
-                "id": 1254,
+                "id": 2043,
                 "name": "ParameterList",
-                "src": "177:41:5"
+                "src": "177:41:8"
               },
               {
                 "attributes": {
@@ -600,14 +600,14 @@
                   ]
                 },
                 "children": [],
-                "id": 1255,
+                "id": 2044,
                 "name": "ParameterList",
-                "src": "227:0:5"
+                "src": "227:0:8"
               }
             ],
-            "id": 1256,
+            "id": 2045,
             "name": "FunctionDefinition",
-            "src": "160:68:5"
+            "src": "160:68:8"
           },
           {
             "attributes": {
@@ -619,9 +619,9 @@
               "modifiers": [
                 null
               ],
-              "name": "finishGame",
+              "name": "finishTimeoutGame",
               "payable": false,
-              "scope": 1262,
+              "scope": 2051,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -633,7 +633,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "gameId",
-                      "scope": 1261,
+                      "scope": 2050,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -646,19 +646,19 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 1257,
+                        "id": 2046,
                         "name": "ElementaryTypeName",
-                        "src": "254:6:5"
+                        "src": "261:6:8"
                       }
                     ],
-                    "id": 1258,
+                    "id": 2047,
                     "name": "VariableDeclaration",
-                    "src": "254:13:5"
+                    "src": "261:13:8"
                   }
                 ],
-                "id": 1259,
+                "id": 2048,
                 "name": "ParameterList",
-                "src": "253:15:5"
+                "src": "260:15:8"
               },
               {
                 "attributes": {
@@ -667,24 +667,24 @@
                   ]
                 },
                 "children": [],
-                "id": 1260,
+                "id": 2049,
                 "name": "ParameterList",
-                "src": "277:0:5"
+                "src": "284:0:8"
               }
             ],
-            "id": 1261,
+            "id": 2050,
             "name": "FunctionDefinition",
-            "src": "234:44:5"
+            "src": "234:51:8"
           }
         ],
-        "id": 1262,
+        "id": 2051,
         "name": "ContractDefinition",
-        "src": "66:214:5"
+        "src": "66:221:8"
       }
     ],
-    "id": 1263,
+    "id": 2052,
     "name": "SourceUnit",
-    "src": "32:249:5"
+    "src": "32:256:8"
   },
   "compiler": {
     "name": "solc",
@@ -692,7 +692,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-12T10:01:35.058Z",
+  "updatedAt": "2022-04-21T05:51:29.931Z",
   "devdoc": {
     "methods": {}
   },
