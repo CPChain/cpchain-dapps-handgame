@@ -11,6 +11,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     uint256 public timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
     uint32 public viewCountLimit = 10;
+    uint32 public topPlayerLength = 3;
+    address[] public topPlayerList;
 
     constructor()
         public
@@ -87,6 +89,10 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     function setTimeoutLimit(uint256 limit) external onlyOwner {
         timeoutLimit = limit;
         emit SetTimeoutLimit(limit);
+    }
+
+    function viewTopPlayers() external view returns (address[]) {
+        return topPlayerList;
     }
 
     // view
@@ -206,8 +212,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         game.amount = game.amount + game.threshold;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
-        _mint(game.starter, 2);
-        _mint(game.player, 1);
+        _mintAndSort(game.starter, 2);
+        _mintAndSort(game.player, 1);
         emit GameLocked(gameId, msg.sender, card, game.threshold);
     }
 
@@ -265,19 +271,97 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     }
 
     // private methods
+    function _mintAndSort(address account, uint256 amount) internal {
+        uint256 preLastInListBalance = 0;
+        if (topPlayerList.length >= topPlayerLength) {
+            preLastInListBalance = balanceOf(
+                topPlayerList[topPlayerList.length - 1]
+            );
+        }
+
+        _mint(account, amount);
+        int32 indexOf = _indexOfTopPlayerList(account);
+
+        // list more than topPlayerLength
+        if (topPlayerList.length >= topPlayerLength) {
+            // add new account to top list
+            if (balanceOf(account) > preLastInListBalance) {
+                if (indexOf < 0) {
+                    topPlayerList[topPlayerList.length - 1] = account;
+                    indexOf = int32(topPlayerList.length - 1);
+                }
+                _resortPlayerList(account, indexOf);
+            }
+        } else {
+            // if account is not in top list,push and resort
+            if (indexOf < 0) {
+                topPlayerList.push(account);
+                indexOf = int32(topPlayerList.length - 1);
+            }
+            _resortPlayerList(account, indexOf);
+        }
+    }
+
+    // function _inTopPlayerList(address account) internal returns (bool) {
+    //     bool inList = false;
+    //     for (uint256 i = 0; i < topPlayerList.length; i++) {
+    //         if (account == topPlayerList[i]) {
+    //             inList = true;
+    //             break;
+    //         }
+    //     }
+    //     return inList;
+    // }
+
+    function _indexOfTopPlayerList(address account) internal returns (int32) {
+        int32 indexOf = -1;
+        for (uint256 i = 0; i < topPlayerList.length; i++) {
+            if (account == topPlayerList[i]) {
+                indexOf = int32(i);
+                break;
+            }
+        }
+        return indexOf;
+    }
+
+    /**resort top list,need new player in tip list
+     */
+    function _resortPlayerList(address account, int32 end) internal {
+        if (topPlayerList.length > 1) {
+            uint256 newBalance = balanceOf(account);
+            uint256 newIndex = uint256(end);
+            // find new location for account
+            for (uint256 i = 0; i < newIndex; i++) {
+                if (newBalance > balanceOf(topPlayerList[i])) {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            // if need to change the list
+            if (newIndex < uint256(end)) {
+                // change data after new location
+                for (uint256 j = uint256(end); j > newIndex; j--) {
+                    topPlayerList[j] = topPlayerList[j - 1];
+                }
+                topPlayerList[newIndex] = account;
+            }
+        }
+    }
+
     function _finishGame(uint64 gameId, int8 r) private {
         HandGame storage game = games[gameId];
         if (r == 1) {
             game.starter.transfer(game.amount);
-            _mint(game.starter, 3);
+            _mintAndSort(game.starter, 3);
         } else if (r == -1) {
             game.player.transfer(game.amount);
-            _mint(game.player, 3);
+            _mintAndSort(game.player, 3);
         } else {
             game.starter.transfer(game.amount / 2);
             game.player.transfer(game.amount / 2);
-            _mint(game.starter, 1);
-            _mint(game.player, 1);
+            _mintAndSort(game.starter, 1);
+            _mintAndSort(game.player, 1);
         }
         game.status = 2;
         emit GameFinished(gameId, r);
