@@ -4,12 +4,18 @@ import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
+import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/ERC20.sol";
 
-contract Game is IGame, IStarter, IPlayer, Enable {
+contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
     uint32 public viewCountLimit = 10;
+
+    constructor()
+        public
+        ERC20("RPS", "Rock paper scissors game score", 18, 0)
+    {}
 
     struct GameCard {
         uint256 card;
@@ -200,6 +206,8 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         game.amount = game.amount + game.threshold;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
+        _mint(game.starter, 2);
+        _mint(game.player, 1);
         emit GameLocked(gameId, msg.sender, card, game.threshold);
     }
 
@@ -233,44 +241,48 @@ contract Game is IGame, IStarter, IPlayer, Enable {
                 game.starterCard.content,
                 game.playerCard.content
             );
-            if (r == 1) {
-                game.starter.transfer(game.amount);
-            } else if (r == -1) {
-                game.player.transfer(game.amount);
-            } else {
-                game.starter.transfer(game.amount / 2);
-                game.player.transfer(game.amount / 2);
-            }
-            game.status = 2;
-            emit GameFinished(gameId, r);
+            _finishGame(gameId, r);
         }
     }
 
-    function finishGame(uint64 gameId)
+    function finishTimeoutGame(uint64 gameId)
         external
         onlyGameStarted(gameId)
         onlyPlayer(gameId)
         needGameStatus(gameId, 1)
         onlyTimeout(gameId)
     {
-        HandGame storage game = games[gameId];
+        HandGame memory game = games[gameId];
         GameCard memory starter = game.starterCard;
         GameCard memory player = game.playerCard;
         if (starter.content != 0) {
-            game.starter.transfer(game.amount);
-            emit GameFinished(gameId, 1);
+            _finishGame(gameId, 1);
         } else if (player.content != 0) {
-            game.player.transfer(game.amount);
-            emit GameFinished(gameId, -1);
+            _finishGame(gameId, -1);
         } else {
-            game.starter.transfer(game.amount / 2);
-            game.player.transfer(game.amount / 2);
-            emit GameFinished(gameId, 0);
+            _finishGame(gameId, 0);
         }
-        game.status = 2;
     }
 
     // private methods
+    function _finishGame(uint64 gameId, int8 r) private {
+        HandGame storage game = games[gameId];
+        if (r == 1) {
+            game.starter.transfer(game.amount);
+            _mint(game.starter, 3);
+        } else if (r == -1) {
+            game.player.transfer(game.amount);
+            _mint(game.player, 3);
+        } else {
+            game.starter.transfer(game.amount / 2);
+            game.player.transfer(game.amount / 2);
+            _mint(game.starter, 1);
+            _mint(game.player, 1);
+        }
+        game.status = 2;
+        emit GameFinished(gameId, r);
+    }
+
     function _isTimeout(uint64 gameId) private view returns (bool) {
         HandGame memory game = games[gameId];
         return (game.timeout <= block.timestamp);

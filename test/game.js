@@ -71,7 +71,17 @@ contract("Test Game ", (accounts) => {
         });
 
         gasUsed[1] = gasUsed[1] + r.receipt.gasUsed
+
     })
+    it("should get score:" + accounts[1], async () => {
+        const instance = await Game.deployed()
+        const b0 = await instance.balanceOf(accounts[0])
+        const b1 = await instance.balanceOf(accounts[1])
+        console.log(b0, b1)
+        assert.ok(b0 == 2)
+        assert.ok(b1 == 1)
+    })
+
     it("should open card success for" + accounts[1], async () => {
         const key = 'key2'
         const content = '2'
@@ -194,9 +204,21 @@ contract("Test Game ", (accounts) => {
         }
     })
 
-    it("should cancel game success for owner  ", async () => {
+    it("should join game failed for time out  ", async () => {
         const instance = await Game.deployed()
         await sleep(15 * 1000)
+        const key = 'key2'
+        const content = '2'
+        const card = web3.utils.sha3(web3.utils.toHex(key) + content, { encoding: "hex" })
+        try {
+            const c = await instance.joinGame(gameId, card, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(5)) })
+        } catch (error) {
+            assert.ok(error.toString().includes('time is out'))
+        }
+    })
+
+    it("should cancel game success for owner  ", async () => {
+        const instance = await Game.deployed()
         const c = await instance.cancelGame(gameId)
         truffleAssert.eventEmitted(c, 'GameCancelled', (ev) => {
             return ev[0] == gameId
@@ -397,7 +419,7 @@ contract("Test Game ", (accounts) => {
         const instance = await Game.deployed()
         await sleep(15 * 1000)
 
-        const r3 = await instance.finishGame(gameId5, { from: accounts[3] })
+        const r3 = await instance.finishTimeoutGame(gameId5, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId5 && ev[1] == 0
         });
@@ -443,7 +465,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 6", async () => {
         const instance = await Game.deployed()
         await sleep(15 * 1000)
-        const r3 = await instance.finishGame(gameId6, { from: accounts[3] })
+        const r3 = await instance.finishTimeoutGame(gameId6, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId6 && ev[1] == 1
         });
@@ -487,7 +509,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 7", async () => {
         const instance = await Game.deployed()
         await sleep(15 * 1000)
-        const r3 = await instance.finishGame(gameId7, { from: accounts[3] })
+        const r3 = await instance.finishTimeoutGame(gameId7, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId7 && ev[1] == -1
         });
@@ -550,7 +572,7 @@ contract("Test Game ", (accounts) => {
     it("it is time out for game 8", async () => {
         const instance = await Game.deployed()
         await sleep(15 * 1000)
-        const r3 = await instance.finishGame(gameId8, { from: accounts[3] })
+        const r3 = await instance.finishTimeoutGame(gameId8, { from: accounts[3] })
         truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
             return ev[0] == gameId8 && ev[1] == -1
         });
@@ -574,6 +596,21 @@ contract("Test Game ", (accounts) => {
 
     })
 
+    it("should get ERC2 current", async () => {
+        const instance = await Game.deployed()
+        const b0 = await instance.balanceOf(accounts[0])
+        const b1 = await instance.balanceOf(accounts[1])
+        const b2 = await instance.balanceOf(accounts[2])
+        const b3 = await instance.balanceOf(accounts[3])
+        const b4 = await instance.balanceOf(accounts[4])
+        console.log(b0, b1, b2, b3, b4)
+        assert.ok(b0 == 2)
+        assert.ok(b1 == 4)
+        assert.ok(b2 == 20)
+        assert.ok(b3 == 14)
+        assert.ok(b4 == 0)
+
+    })
 
 })
 
