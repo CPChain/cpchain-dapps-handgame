@@ -618,7 +618,10 @@ contract("Test Game ", (accounts) => {
         const instance = await Game.deployed()
         try {
             const topArr = await instance.viewTopPlayers()
-            console.log(topArr)
+
+            assert.ok(topArr[0] == accounts[2])
+            assert.ok(topArr[1] == accounts[3])
+            assert.ok(topArr[2] == accounts[1])
             for (let index = 0; index < topArr.length; index++) {
                 const element = topArr[index];
                 console.log(await instance.balanceOf(element))

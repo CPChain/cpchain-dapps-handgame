@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
+import "./interfaces/IGroupChat.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/ERC20.sol";
 
@@ -13,6 +14,9 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     uint32 public viewCountLimit = 10;
     uint32 public topPlayerLength = 3;
     address[] public topPlayerList;
+
+    address groupChatAddress;
+    IGroupChat groupchatInstance;
 
     constructor()
         public
@@ -39,7 +43,23 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     }
 
     HandGame[] public games;
+    mapping(uint64 => uint256) internal gameToGroup;
 
+    modifier onlyActivatedGroupMember(uint256 group_id) {
+        require(
+           groupChatAddress != address(0x0),
+            "No group chat address"
+        );
+        require(
+            groupchatInstance.has(group_id, msg.sender),
+            "You are not in this group"
+        );
+        require(
+            !groupchatInstance.isBanned(group_id, msg.sender),
+            "You have been banned"
+        );
+        _;
+    }
     modifier onlyPlayer(uint64 gameId) {
         require(
             games[gameId].starter == msg.sender ||
@@ -80,6 +100,12 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     }
 
     // contract owner methods
+
+    function setGroupChat(address groupchat) public onlyOwner {
+        groupChatAddress = groupchat;
+        groupchatInstance = IGroupChat(groupchat);
+    }
+
     function setMaxLimit(uint256 limit) external onlyOwner {
         require(limit >= 1 ether, "limit to low");
         maxLimit = limit;
@@ -159,22 +185,26 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         payable
         onlyEnabled
     {
-        GameCard memory starter = GameCard(card, "", 0);
-        GameCard memory player = GameCard(0, "", 0);
-        HandGame memory game = HandGame(
-            totalGameNumber,
-            msg.value,
+        _createGame(card, threshold);
+    }
+
+    function startGroupChatGame(
+        uint256 card,
+        uint256 threshold,
+        uint256 group_id,
+        string userMessage
+    ) external payable onlyEnabled {
+        uint64 gameId = _createGame(card, threshold);
+        gameToGroup[gameId] = group_id;
+        _notifyGroup(group_id, gameId);
+        emit CreateGroupHandGame(
+            group_id,
+            gameId,
             msg.sender,
-            address(0),
-            0,
-            starter,
-            player,
-            block.timestamp + timeoutLimit,
+            userMessage,
+            msg.value,
             threshold
         );
-        totalGameNumber++;
-        games.push(game);
-        emit GameStarted(game.gameId, game.starter, card, msg.value, threshold);
     }
 
     function cancelGame(uint64 gameId)
@@ -198,23 +228,12 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         needGameStatus(gameId, 0)
         notTimeout(gameId)
     {
-        HandGame storage game = games[gameId];
-
-        GameCard memory playerCard = GameCard(card, "", 0);
-        require(msg.value >= game.threshold, "wrong balance");
-        // 退款
-        if (msg.value > game.threshold) {
-            msg.sender.transfer(msg.value - game.threshold);
+        uint256 group_id = gameToGroup[gameId];
+        if (group_id > 0) {
+            _lockGroupGame(gameId, card, group_id);
+        } else {
+            _lockGame(gameId, card);
         }
-
-        game.player = msg.sender;
-        game.playerCard = playerCard;
-        game.amount = game.amount + game.threshold;
-        game.timeout = timeoutLimit + block.timestamp;
-        game.status = 1;
-        _mintAndSort(game.starter, 2);
-        _mintAndSort(game.player, 1);
-        emit GameLocked(gameId, msg.sender, card, game.threshold);
     }
 
     function openCard(
@@ -271,6 +290,76 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     }
 
     // private methods
+
+    function _notifyGroup(uint256 group_id, uint64 gameId)
+        internal
+        onlyActivatedGroupMember(group_id)
+    {
+        string memory message = _getMessageWithSeq(gameId);
+        groupchatInstance.sendMessage(group_id, message);
+    }
+
+    function _getMessageWithSeq(uint256 seq) public pure returns (string) {
+        string memory _id = uintToString(seq);
+        string memory msg0 = '{"message":{"seq":';
+        string memory msg1 = '},"type":"hanggame","version":"1"}';
+        string memory message = strConcat(msg0, _id);
+        message = strConcat(message, msg1);
+        return message;
+    }
+
+    function _lockGroupGame(
+        uint64 gameId,
+        uint256 card,
+        uint256 group_id
+    ) internal onlyActivatedGroupMember(group_id) {
+        _lockGame(gameId, card);
+    }
+
+    function _lockGame(uint64 gameId, uint256 card)
+        internal
+        notTimeout(gameId)
+    {
+        HandGame storage game = games[gameId];
+        GameCard memory playerCard = GameCard(card, "", 0);
+        require(msg.value >= game.threshold, "wrong balance");
+        // 退款
+        if (msg.value > game.threshold) {
+            msg.sender.transfer(msg.value - game.threshold);
+        }
+        game.player = msg.sender;
+        game.playerCard = playerCard;
+        game.amount = game.amount + game.threshold;
+        game.timeout = timeoutLimit + block.timestamp;
+        game.status = 1;
+        _mintAndSort(game.starter, 2);
+        _mintAndSort(game.player, 1);
+        emit GameLocked(gameId, msg.sender, card, game.threshold);
+    }
+
+    function _createGame(uint256 card, uint256 threshold)
+        internal
+        returns (uint64)
+    {
+        GameCard memory starter = GameCard(card, "", 0);
+        GameCard memory player = GameCard(0, "", 0);
+        HandGame memory game = HandGame(
+            totalGameNumber,
+            msg.value,
+            msg.sender,
+            address(0),
+            0,
+            starter,
+            player,
+            block.timestamp + timeoutLimit,
+            threshold
+        );
+        totalGameNumber++;
+        games.push(game);
+        emit GameStarted(game.gameId, game.starter, card, msg.value, threshold);
+        return game.gameId;
+    }
+
     function _mintAndSort(address account, uint256 amount) internal {
         uint256 preLastInListBalance = 0;
         if (topPlayerList.length >= topPlayerLength) {
@@ -302,16 +391,33 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         }
     }
 
-    // function _inTopPlayerList(address account) internal returns (bool) {
-    //     bool inList = false;
-    //     for (uint256 i = 0; i < topPlayerList.length; i++) {
-    //         if (account == topPlayerList[i]) {
-    //             inList = true;
-    //             break;
-    //         }
-    //     }
-    //     return inList;
-    // }
+    function strConcat(string _a, string _b) internal pure returns (string) {
+        bytes memory a = bytes(_a);
+        bytes memory b = bytes(_b);
+        string memory ab = new string(a.length + b.length);
+        bytes memory aAB = bytes(ab);
+        uint256 k = 0;
+        for (uint256 i = 0; i < a.length; i++) aAB[k++] = a[i];
+        for (i = 0; i < b.length; i++) aAB[k++] = b[i];
+        return string(aAB);
+    }
+
+    function uintToString(uint256 i) internal pure returns (string) {
+        if (i == 0) return "0";
+        uint256 j = i;
+        uint256 length;
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint256 k = length - 1;
+        while (i != 0) {
+            bstr[k--] = bytes1(48 + (i % 10));
+            i /= 10;
+        }
+        return string(bstr);
+    }
 
     function _indexOfTopPlayerList(address account) internal returns (int32) {
         int32 indexOf = -1;

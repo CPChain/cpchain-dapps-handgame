@@ -14,6 +14,15 @@ interface IGame {
         uint256 amount,
         uint256 threshold
     );
+
+    event CreateGroupHandGame(
+        uint256 indexed group_id,
+        uint64 indexed gameId,
+        address starter,
+        string message,
+        uint256 amount,
+        uint256 threshold
+    );
     /**
      * No other player join the game, starter cancel the game
      */
