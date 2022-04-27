@@ -4,25 +4,26 @@ import "./interfaces/IGame.sol";
 import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
 import "./interfaces/IGroupChat.sol";
+import "./interfaces/IRPS.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
-import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/IERC20.sol";
 
 contract Game is IGame, IStarter, IPlayer, Enable {
-    uint256 private maxLimit = 1000 ether;
-    uint256 private timeoutLimit = 10 minutes;
-    uint64 private totalGameNumber = 0;
-    uint32 private viewCountLimit = 10;
+    uint256 public maxLimit = 1000 ether;
+    uint256 public timeoutLimit = 10 minutes;
+    uint64 public totalGameNumber = 0;
+    uint32 public viewCountLimit = 10;
 
-    address private groupChatAddress;
+    address public groupChatAddress;
     IGroupChat private groupchatInstance;
 
-    address private RPSAddress;
-    IERC20 private RPSInstance;
+    address public RPSAddress;
 
-    constructor()
-        public
-        ERC20("RPS", "Rock paper scissors game score", 18, 0)
-    {}
+    IRPS private RPSInstance;
+
+    constructor(address rps) public {
+        RPSAddress = rps;
+        RPSInstance = IRPS(rps);
+    }
 
     struct GameCard {
         uint256 card;
@@ -43,8 +44,8 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         uint256 threshold;
     }
 
-    HandGame[] private games;
-    mapping(uint64 => uint256) internal gameToGroup;
+    HandGame[] public games;
+    mapping(uint64 => uint256) public gameToGroup;
 
     modifier onlyActivatedGroupMember(uint256 group_id) {
         require(groupChatAddress != address(0x0), "No group chat address");
@@ -173,7 +174,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         uint256 threshold,
         uint256 group_id,
         string userMessage
-    ) external payable onlyEnabled {
+    ) external payable onlyActivatedGroupMember(group_id) onlyEnabled {
         uint64 gameId = _createGame(card, threshold);
         gameToGroup[gameId] = group_id;
         _notifyGroup(group_id, gameId);
@@ -260,6 +261,14 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         }
     }
 
+    function balanceOf(address account) public view returns (uint256) {
+        return RPSInstance.balanceOfRPS(account);
+    }
+
+    function transfer(address recipient, uint256 amount) public returns (bool) {
+        return RPSInstance.transferRPS(recipient, amount);
+    }
+
     // private methods
 
     function _notifyGroup(uint256 group_id, uint64 gameId)
@@ -328,7 +337,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     }
 
     function _mintRPS(address account, uint256 amount) private {
-        RPSInstance._mint(account, amount);
+        RPSInstance.mintRPS(account, amount);
     }
 
     function uintToString(uint256 i) internal pure returns (string) {

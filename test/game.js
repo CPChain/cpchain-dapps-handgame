@@ -1,4 +1,5 @@
 const Game = artifacts.require("Game");
+const RPS = artifacts.require("RPS");
 const truffleAssert = require('truffle-assertions');
 const gasUsed = [0, 0, 0, 0, 0]
 const sleep = time => {
@@ -6,9 +7,13 @@ const sleep = time => {
 };
 contract("Test Game ", (accounts) => {
     it("should get contract params success for " + accounts[0], async () => {
+        const rps = await RPS.deployed()
         const instance = await Game.deployed()
         const maxLimit = await instance.maxLimit()
         const timeoutLimit = await instance.timeoutLimit()
+
+        const address = await instance.RPSAddress()
+        console.log(111111111111, rps.address, address)
         assert.equal(web3.utils.fromWei(maxLimit), 1000)
         assert.equal(timeoutLimit, 10 * 60)
     })
@@ -204,7 +209,8 @@ contract("Test Game ", (accounts) => {
             await instance.cancelGame(gameId, { from: accounts[1] })
             assert.fail()
         } catch (error) {
-            assert.ok(error.toString().includes('need game starter'))
+            console.log(error)
+            assert.ok(error.toString().includes('need game player'))
         }
     })
 
@@ -361,7 +367,8 @@ contract("Test Game ", (accounts) => {
             const r2 = await instance.openCard(gameId4, key2, content2, { from: accounts[2] })
             assert.fail()
         } catch (error) {
-            assert.ok(error.toString().includes('wrong content'))
+            console.log(error)
+            assert.ok(error.toString().includes('wrong key or content'))
         }
     })
 
@@ -613,24 +620,6 @@ contract("Test Game ", (accounts) => {
         assert.ok(b4 == 0)
     })
 
-
-    it("should get top list current", async () => {
-        const instance = await Game.deployed()
-        try {
-            const topArr = await instance.viewTopPlayers()
-
-            assert.ok(topArr[0] == accounts[2])
-            assert.ok(topArr[1] == accounts[3])
-            assert.ok(topArr[2] == accounts[1])
-            for (let index = 0; index < topArr.length; index++) {
-                const element = topArr[index];
-                console.log(await instance.balanceOf(element))
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-    })
 
 
 
