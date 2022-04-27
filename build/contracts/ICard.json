@@ -1,0 +1,844 @@
+{
+  "contractName": "ICard",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "card",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "name": "proof",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "name": "content",
+          "type": "uint256"
+        }
+      ],
+      "name": "CardOpened",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "card",
+          "type": "uint256"
+        },
+        {
+          "name": "proof",
+          "type": "uint256"
+        },
+        {
+          "name": "content",
+          "type": "uint256"
+        }
+      ],
+      "name": "validateCard",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "card",
+          "type": "uint256"
+        }
+      ],
+      "name": "viewCard",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface ICard {\n    /**\n     * @dev Emitted when `card` been proved by `proof` and `content`\n     */\n    event CardOpened(\n        uint256 indexed card,\n        uint256 indexed proof,\n        uint256 indexed content\n    );\n\n    /**\n     * @dev Open the card with proof and content\n     */\n    function validateCard(\n        uint256 card,\n        uint256 proof,\n        uint256 content\n    ) external;\n\n    /**\n     * @dev get the card from contract\n     *\n     * Returns the proof and conttent.\n     *\n     * Note if the card is not opened,returns should be zero\n     */\n    function viewCard(uint256 card) external view returns (uint256, uint256);\n}\n",
+  "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/ICard.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/ICard.sol",
+    "exportedSymbols": {
+      "ICard": [
+        2406
+      ]
+    },
+    "id": 2407,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2379,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:7"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2406,
+        "linearizedBaseContracts": [
+          2406
+        ],
+        "name": "ICard",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": "@dev Emitted when `card` been proved by `proof` and `content`",
+            "id": 2387,
+            "name": "CardOpened",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 2386,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2381,
+                  "indexed": true,
+                  "name": "card",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2387,
+                  "src": "199:20:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2380,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "199:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2383,
+                  "indexed": true,
+                  "name": "proof",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2387,
+                  "src": "229:21:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2382,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "229:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2385,
+                  "indexed": true,
+                  "name": "content",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2387,
+                  "src": "260:23:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2384,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "260:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "189:100:7"
+            },
+            "src": "173:117:7"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Open the card with proof and content",
+            "id": 2396,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "validateCard",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2394,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2389,
+                  "name": "card",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2396,
+                  "src": "392:12:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2388,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "392:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2391,
+                  "name": "proof",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2396,
+                  "src": "414:13:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2390,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "414:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2393,
+                  "name": "content",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2396,
+                  "src": "437:15:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2392,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "437:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "382:76:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2395,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "467:0:7"
+            },
+            "scope": 2406,
+            "src": "361:107:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev get the card from contract\n     * Returns the proof and conttent.\n     * Note if the card is not opened,returns should be zero",
+            "id": 2405,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "viewCard",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2399,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2398,
+                  "name": "card",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2405,
+                  "src": "661:12:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2397,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "661:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "660:14:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2404,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2401,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2405,
+                  "src": "698:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2400,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "698:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2403,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2405,
+                  "src": "707:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2402,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "707:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "697:18:7"
+            },
+            "scope": 2406,
+            "src": "643:73:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2407,
+        "src": "66:652:7"
+      }
+    ],
+    "src": "32:687:7"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/interfaces/ICard.sol",
+      "exportedSymbols": {
+        "ICard": [
+          2406
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".22",
+            "<",
+            "0.9",
+            ".0"
+          ]
+        },
+        "id": 2379,
+        "name": "PragmaDirective",
+        "src": "32:32:7"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            2406
+          ],
+          "name": "ICard",
+          "scope": 2407
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": "@dev Emitted when `card` been proved by `proof` and `content`",
+              "name": "CardOpened"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "card",
+                      "scope": 2387,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2380,
+                        "name": "ElementaryTypeName",
+                        "src": "199:7:7"
+                      }
+                    ],
+                    "id": 2381,
+                    "name": "VariableDeclaration",
+                    "src": "199:20:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "proof",
+                      "scope": 2387,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2382,
+                        "name": "ElementaryTypeName",
+                        "src": "229:7:7"
+                      }
+                    ],
+                    "id": 2383,
+                    "name": "VariableDeclaration",
+                    "src": "229:21:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "content",
+                      "scope": 2387,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2384,
+                        "name": "ElementaryTypeName",
+                        "src": "260:7:7"
+                      }
+                    ],
+                    "id": 2385,
+                    "name": "VariableDeclaration",
+                    "src": "260:23:7"
+                  }
+                ],
+                "id": 2386,
+                "name": "ParameterList",
+                "src": "189:100:7"
+              }
+            ],
+            "id": 2387,
+            "name": "EventDefinition",
+            "src": "173:117:7"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "documentation": "@dev Open the card with proof and content",
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "validateCard",
+              "payable": false,
+              "scope": 2406,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "card",
+                      "scope": 2396,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2388,
+                        "name": "ElementaryTypeName",
+                        "src": "392:7:7"
+                      }
+                    ],
+                    "id": 2389,
+                    "name": "VariableDeclaration",
+                    "src": "392:12:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "proof",
+                      "scope": 2396,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2390,
+                        "name": "ElementaryTypeName",
+                        "src": "414:7:7"
+                      }
+                    ],
+                    "id": 2391,
+                    "name": "VariableDeclaration",
+                    "src": "414:13:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "content",
+                      "scope": 2396,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2392,
+                        "name": "ElementaryTypeName",
+                        "src": "437:7:7"
+                      }
+                    ],
+                    "id": 2393,
+                    "name": "VariableDeclaration",
+                    "src": "437:15:7"
+                  }
+                ],
+                "id": 2394,
+                "name": "ParameterList",
+                "src": "382:76:7"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 2395,
+                "name": "ParameterList",
+                "src": "467:0:7"
+              }
+            ],
+            "id": 2396,
+            "name": "FunctionDefinition",
+            "src": "361:107:7"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "documentation": "@dev get the card from contract\n     * Returns the proof and conttent.\n     * Note if the card is not opened,returns should be zero",
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "viewCard",
+              "payable": false,
+              "scope": 2406,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "card",
+                      "scope": 2405,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2397,
+                        "name": "ElementaryTypeName",
+                        "src": "661:7:7"
+                      }
+                    ],
+                    "id": 2398,
+                    "name": "VariableDeclaration",
+                    "src": "661:12:7"
+                  }
+                ],
+                "id": 2399,
+                "name": "ParameterList",
+                "src": "660:14:7"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 2405,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2400,
+                        "name": "ElementaryTypeName",
+                        "src": "698:7:7"
+                      }
+                    ],
+                    "id": 2401,
+                    "name": "VariableDeclaration",
+                    "src": "698:7:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 2405,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2402,
+                        "name": "ElementaryTypeName",
+                        "src": "707:7:7"
+                      }
+                    ],
+                    "id": 2403,
+                    "name": "VariableDeclaration",
+                    "src": "707:7:7"
+                  }
+                ],
+                "id": 2404,
+                "name": "ParameterList",
+                "src": "697:18:7"
+              }
+            ],
+            "id": 2405,
+            "name": "FunctionDefinition",
+            "src": "643:73:7"
+          }
+        ],
+        "id": 2406,
+        "name": "ContractDefinition",
+        "src": "66:652:7"
+      }
+    ],
+    "id": 2407,
+    "name": "SourceUnit",
+    "src": "32:687:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Linux.g++"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-04-26T09:03:58.360Z",
+  "devdoc": {
+    "methods": {
+      "validateCard(uint256,uint256,uint256)": {
+        "details": "Open the card with proof and content"
+      },
+      "viewCard(uint256)": {
+        "details": "get the card from contract     * Returns the proof and conttent.     * Note if the card is not opened,returns should be zero"
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

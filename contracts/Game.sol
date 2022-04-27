@@ -8,15 +8,15 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/ERC20.sol";
 
 contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
-    uint256 public maxLimit = 1000 ether;
-    uint256 public timeoutLimit = 10 minutes;
-    uint64 public totalGameNumber = 0;
-    uint32 public viewCountLimit = 10;
-    uint32 public topPlayerLength = 3;
-    address[] public topPlayerList;
+    uint256 private maxLimit = 1000 ether;
+    uint256 private timeoutLimit = 10 minutes;
+    uint64 private totalGameNumber = 0;
+    uint32 private viewCountLimit = 10;
+    // uint32 public topPlayerLength = 3;
+    // address[] public topPlayerList;
 
-    address groupChatAddress;
-    IGroupChat groupchatInstance;
+    address private groupChatAddress;
+    IGroupChat private groupchatInstance;
 
     constructor()
         public
@@ -42,14 +42,11 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         uint256 threshold;
     }
 
-    HandGame[] public games;
+    HandGame[] private games;
     mapping(uint64 => uint256) internal gameToGroup;
 
     modifier onlyActivatedGroupMember(uint256 group_id) {
-        require(
-           groupChatAddress != address(0x0),
-            "No group chat address"
-        );
+        require(groupChatAddress != address(0x0), "No group chat address");
         require(
             groupchatInstance.has(group_id, msg.sender),
             "You are not in this group"
@@ -69,11 +66,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         _;
     }
 
-    modifier onlyStarter(uint64 gameId) {
-        require(games[gameId].starter == msg.sender, "need game starter");
-        _;
-    }
-
     modifier onlyTimeout(uint64 gameId) {
         require(_isTimeout(gameId), "need game time out");
         _;
@@ -84,18 +76,14 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         _;
     }
 
-    modifier onlyGameStarted(uint64 gameId) {
-        require(gameId < totalGameNumber, "wrong game id");
-        _;
-    }
+    // modifier onlyGameStarted(uint64 gameId) {
+    //     require(gameId < totalGameNumber, "wrong game id");
+    //     _;
+    // }
 
     modifier needGameStatus(uint64 gameId, uint8 status) {
+        require(gameId < totalGameNumber, "wrong game id");
         require(games[gameId].status == status, "wrong game status");
-        _;
-    }
-
-    modifier needCurrentContent(uint8 content) {
-        require(content < 4 && content > 0, "wrong content");
         _;
     }
 
@@ -117,15 +105,14 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         emit SetTimeoutLimit(limit);
     }
 
-    function viewTopPlayers() external view returns (address[]) {
-        return topPlayerList;
-    }
+    // function viewTopPlayers() external view returns (address[]) {
+    //     return topPlayerList;
+    // }
 
     // view
     function viewGame(uint64 gameId)
         external
         view
-        onlyGameStarted(gameId)
         returns (
             uint256,
             uint256,
@@ -141,6 +128,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
             uint8
         )
     {
+        require(gameId < totalGameNumber, "wrong game id");
         HandGame memory game = games[gameId];
         return (
             game.amount,
@@ -209,8 +197,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
 
     function cancelGame(uint64 gameId)
         external
-        onlyGameStarted(gameId)
-        onlyStarter(gameId)
+        onlyPlayer(gameId)
         needGameStatus(gameId, 0)
         onlyTimeout(gameId)
     {
@@ -224,7 +211,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     function joinGame(uint64 gameId, uint256 card)
         external
         payable
-        onlyGameStarted(gameId)
         needGameStatus(gameId, 0)
         notTimeout(gameId)
     {
@@ -240,13 +226,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         uint64 gameId,
         string key,
         uint8 content
-    )
-        external
-        onlyGameStarted(gameId)
-        onlyPlayer(gameId)
-        needGameStatus(gameId, 1)
-        needCurrentContent(content)
-    {
+    ) external onlyPlayer(gameId) needGameStatus(gameId, 1) {
         HandGame storage game = games[gameId];
         GameCard storage card;
         if (game.starter == msg.sender) {
@@ -272,7 +252,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
 
     function finishTimeoutGame(uint64 gameId)
         external
-        onlyGameStarted(gameId)
         onlyPlayer(gameId)
         needGameStatus(gameId, 1)
         onlyTimeout(gameId)
@@ -299,7 +278,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         groupchatInstance.sendMessage(group_id, message);
     }
 
-    function _getMessageWithSeq(uint256 seq) public pure returns (string) {
+    function _getMessageWithSeq(uint256 seq) private pure returns (string) {
         string memory _id = uintToString(seq);
         string memory msg0 = '{"message":{"seq":';
         string memory msg1 = '},"type":"hanggame","version":"1"}';
@@ -312,14 +291,11 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         uint64 gameId,
         uint256 card,
         uint256 group_id
-    ) internal onlyActivatedGroupMember(group_id) {
+    ) private onlyActivatedGroupMember(group_id) {
         _lockGame(gameId, card);
     }
 
-    function _lockGame(uint64 gameId, uint256 card)
-        internal
-        notTimeout(gameId)
-    {
+    function _lockGame(uint64 gameId, uint256 card) private {
         HandGame storage game = games[gameId];
         GameCard memory playerCard = GameCard(card, "", 0);
         require(msg.value >= game.threshold, "wrong balance");
@@ -338,7 +314,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
     }
 
     function _createGame(uint256 card, uint256 threshold)
-        internal
+        private
         returns (uint64)
     {
         GameCard memory starter = GameCard(card, "", 0);
@@ -360,35 +336,35 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         return game.gameId;
     }
 
-    function _mintAndSort(address account, uint256 amount) internal {
-        uint256 preLastInListBalance = 0;
-        if (topPlayerList.length >= topPlayerLength) {
-            preLastInListBalance = balanceOf(
-                topPlayerList[topPlayerList.length - 1]
-            );
-        }
+    function _mintAndSort(address account, uint256 amount) private {
+        // uint256 preLastInListBalance = 0;
+        // if (topPlayerList.length >= topPlayerLength) {
+        //     preLastInListBalance = balanceOf(
+        //         topPlayerList[topPlayerList.length - 1]
+        //     );
+        // }
 
         _mint(account, amount);
-        int32 indexOf = _indexOfTopPlayerList(account);
+        // int32 indexOf = _indexOfTopPlayerList(account);
 
-        // list more than topPlayerLength
-        if (topPlayerList.length >= topPlayerLength) {
-            // add new account to top list
-            if (balanceOf(account) > preLastInListBalance) {
-                if (indexOf < 0) {
-                    topPlayerList[topPlayerList.length - 1] = account;
-                    indexOf = int32(topPlayerList.length - 1);
-                }
-                _resortPlayerList(account, indexOf);
-            }
-        } else {
-            // if account is not in top list,push and resort
-            if (indexOf < 0) {
-                topPlayerList.push(account);
-                indexOf = int32(topPlayerList.length - 1);
-            }
-            _resortPlayerList(account, indexOf);
-        }
+        // // list more than topPlayerLength
+        // if (topPlayerList.length >= topPlayerLength) {
+        //     // add new account to top list
+        //     if (balanceOf(account) > preLastInListBalance) {
+        //         if (indexOf < 0) {
+        //             topPlayerList[topPlayerList.length - 1] = account;
+        //             indexOf = int32(topPlayerList.length - 1);
+        //         }
+        //         _resortPlayerList(account, indexOf);
+        //     }
+        // } else {
+        //     // if account is not in top list,push and resort
+        //     if (indexOf < 0) {
+        //         topPlayerList.push(account);
+        //         indexOf = int32(topPlayerList.length - 1);
+        //     }
+        //     _resortPlayerList(account, indexOf);
+        // }
     }
 
     function strConcat(string _a, string _b) internal pure returns (string) {
@@ -419,41 +395,41 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         return string(bstr);
     }
 
-    function _indexOfTopPlayerList(address account) internal returns (int32) {
-        int32 indexOf = -1;
-        for (uint256 i = 0; i < topPlayerList.length; i++) {
-            if (account == topPlayerList[i]) {
-                indexOf = int32(i);
-                break;
-            }
-        }
-        return indexOf;
-    }
+    // function _indexOfTopPlayerList(address account) internal returns (int32) {
+    //     int32 indexOf = -1;
+    //     for (uint256 i = 0; i < topPlayerList.length; i++) {
+    //         if (account == topPlayerList[i]) {
+    //             indexOf = int32(i);
+    //             break;
+    //         }
+    //     }
+    //     return indexOf;
+    // }
 
     /**resort top list,need new player in tip list
      */
-    function _resortPlayerList(address account, int32 end) internal {
-        if (topPlayerList.length > 1) {
-            uint256 newBalance = balanceOf(account);
-            uint256 newIndex = uint256(end);
-            // find new location for account
-            for (uint256 i = 0; i < newIndex; i++) {
-                if (newBalance > balanceOf(topPlayerList[i])) {
-                    newIndex = i;
-                    break;
-                }
-            }
+    // function _resortPlayerList(address account, int32 end) internal {
+    //     if (topPlayerList.length > 1) {
+    //         uint256 newBalance = balanceOf(account);
+    //         uint256 newIndex = uint256(end);
+    //         // find new location for account
+    //         for (uint256 i = 0; i < newIndex; i++) {
+    //             if (newBalance > balanceOf(topPlayerList[i])) {
+    //                 newIndex = i;
+    //                 break;
+    //             }
+    //         }
 
-            // if need to change the list
-            if (newIndex < uint256(end)) {
-                // change data after new location
-                for (uint256 j = uint256(end); j > newIndex; j--) {
-                    topPlayerList[j] = topPlayerList[j - 1];
-                }
-                topPlayerList[newIndex] = account;
-            }
-        }
-    }
+    //         // if need to change the list
+    //         if (newIndex < uint256(end)) {
+    //             // change data after new location
+    //             for (uint256 j = uint256(end); j > newIndex; j--) {
+    //                 topPlayerList[j] = topPlayerList[j - 1];
+    //             }
+    //             topPlayerList[newIndex] = account;
+    //         }
+    //     }
+    // }
 
     function _finishGame(uint64 gameId, int8 r) private {
         HandGame storage game = games[gameId];
