@@ -5,18 +5,19 @@ import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
 import "./interfaces/IGroupChat.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
-import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/ERC20.sol";
+import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/IERC20.sol";
 
-contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
+contract Game is IGame, IStarter, IPlayer, Enable {
     uint256 private maxLimit = 1000 ether;
     uint256 private timeoutLimit = 10 minutes;
     uint64 private totalGameNumber = 0;
     uint32 private viewCountLimit = 10;
-    // uint32 public topPlayerLength = 3;
-    // address[] public topPlayerList;
 
     address private groupChatAddress;
     IGroupChat private groupchatInstance;
+
+    address private RPSAddress;
+    IERC20 private RPSInstance;
 
     constructor()
         public
@@ -76,11 +77,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         _;
     }
 
-    // modifier onlyGameStarted(uint64 gameId) {
-    //     require(gameId < totalGameNumber, "wrong game id");
-    //     _;
-    // }
-
     modifier needGameStatus(uint64 gameId, uint8 status) {
         require(gameId < totalGameNumber, "wrong game id");
         require(games[gameId].status == status, "wrong game status");
@@ -104,10 +100,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         timeoutLimit = limit;
         emit SetTimeoutLimit(limit);
     }
-
-    // function viewTopPlayers() external view returns (address[]) {
-    //     return topPlayerList;
-    // }
 
     // view
     function viewGame(uint64 gameId)
@@ -282,8 +274,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         string memory _id = uintToString(seq);
         string memory msg0 = '{"message":{"seq":';
         string memory msg1 = '},"type":"hanggame","version":"1"}';
-        string memory message = strConcat(msg0, _id);
-        message = strConcat(message, msg1);
+        string memory message = string(abi.encodePacked(msg0, _id, msg1));
         return message;
     }
 
@@ -308,8 +299,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         game.amount = game.amount + game.threshold;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
-        _mintAndSort(game.starter, 2);
-        _mintAndSort(game.player, 1);
+        _mintRPS(game.starter, 2);
+        _mintRPS(game.player, 1);
         emit GameLocked(gameId, msg.sender, card, game.threshold);
     }
 
@@ -336,46 +327,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         return game.gameId;
     }
 
-    function _mintAndSort(address account, uint256 amount) private {
-        // uint256 preLastInListBalance = 0;
-        // if (topPlayerList.length >= topPlayerLength) {
-        //     preLastInListBalance = balanceOf(
-        //         topPlayerList[topPlayerList.length - 1]
-        //     );
-        // }
-
-        _mint(account, amount);
-        // int32 indexOf = _indexOfTopPlayerList(account);
-
-        // // list more than topPlayerLength
-        // if (topPlayerList.length >= topPlayerLength) {
-        //     // add new account to top list
-        //     if (balanceOf(account) > preLastInListBalance) {
-        //         if (indexOf < 0) {
-        //             topPlayerList[topPlayerList.length - 1] = account;
-        //             indexOf = int32(topPlayerList.length - 1);
-        //         }
-        //         _resortPlayerList(account, indexOf);
-        //     }
-        // } else {
-        //     // if account is not in top list,push and resort
-        //     if (indexOf < 0) {
-        //         topPlayerList.push(account);
-        //         indexOf = int32(topPlayerList.length - 1);
-        //     }
-        //     _resortPlayerList(account, indexOf);
-        // }
-    }
-
-    function strConcat(string _a, string _b) internal pure returns (string) {
-        bytes memory a = bytes(_a);
-        bytes memory b = bytes(_b);
-        string memory ab = new string(a.length + b.length);
-        bytes memory aAB = bytes(ab);
-        uint256 k = 0;
-        for (uint256 i = 0; i < a.length; i++) aAB[k++] = a[i];
-        for (i = 0; i < b.length; i++) aAB[k++] = b[i];
-        return string(aAB);
+    function _mintRPS(address account, uint256 amount) private {
+        RPSInstance._mint(account, amount);
     }
 
     function uintToString(uint256 i) internal pure returns (string) {
@@ -395,55 +348,19 @@ contract Game is IGame, IStarter, IPlayer, Enable, ERC20 {
         return string(bstr);
     }
 
-    // function _indexOfTopPlayerList(address account) internal returns (int32) {
-    //     int32 indexOf = -1;
-    //     for (uint256 i = 0; i < topPlayerList.length; i++) {
-    //         if (account == topPlayerList[i]) {
-    //             indexOf = int32(i);
-    //             break;
-    //         }
-    //     }
-    //     return indexOf;
-    // }
-
-    /**resort top list,need new player in tip list
-     */
-    // function _resortPlayerList(address account, int32 end) internal {
-    //     if (topPlayerList.length > 1) {
-    //         uint256 newBalance = balanceOf(account);
-    //         uint256 newIndex = uint256(end);
-    //         // find new location for account
-    //         for (uint256 i = 0; i < newIndex; i++) {
-    //             if (newBalance > balanceOf(topPlayerList[i])) {
-    //                 newIndex = i;
-    //                 break;
-    //             }
-    //         }
-
-    //         // if need to change the list
-    //         if (newIndex < uint256(end)) {
-    //             // change data after new location
-    //             for (uint256 j = uint256(end); j > newIndex; j--) {
-    //                 topPlayerList[j] = topPlayerList[j - 1];
-    //             }
-    //             topPlayerList[newIndex] = account;
-    //         }
-    //     }
-    // }
-
     function _finishGame(uint64 gameId, int8 r) private {
         HandGame storage game = games[gameId];
         if (r == 1) {
             game.starter.transfer(game.amount);
-            _mintAndSort(game.starter, 3);
+            _mintRPS(game.starter, 3);
         } else if (r == -1) {
             game.player.transfer(game.amount);
-            _mintAndSort(game.player, 3);
+            _mintRPS(game.player, 3);
         } else {
             game.starter.transfer(game.amount / 2);
             game.player.transfer(game.amount / 2);
-            _mintAndSort(game.starter, 1);
-            _mintAndSort(game.player, 1);
+            _mintRPS(game.starter, 1);
+            _mintRPS(game.player, 1);
         }
         game.status = 2;
         emit GameFinished(gameId, r);
