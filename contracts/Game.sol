@@ -8,21 +8,18 @@ import "./interfaces/IRPS.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
 contract Game is IGame, IStarter, IPlayer, Enable {
-    uint256 public maxLimit = 1000 ether;
-    uint256 public timeoutLimit = 10 minutes;
+    uint256 private maxLimit = 1000 ether;
+    uint256 private timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
-    uint32 public viewCountLimit = 10;
+    uint32 private viewCountLimit = 10;
 
     address public groupChatAddress;
     IGroupChat private groupchatInstance;
-
-    address public RPSAddress;
-
     IRPS private RPSInstance;
 
     constructor(address rps) public {
-        RPSAddress = rps;
         RPSInstance = IRPS(rps);
+        RPSInstance.setMintContract();
     }
 
     struct GameCard {

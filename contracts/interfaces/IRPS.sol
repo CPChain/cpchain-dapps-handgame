@@ -17,4 +17,6 @@ interface IRPS {
      * Emits a {Transfer} event.
      */
     function transferRPS(address to, uint256 amount) external returns (bool);
+
+    function setMintContract() external;
 }

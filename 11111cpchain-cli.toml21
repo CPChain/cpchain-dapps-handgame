@@ -1,0 +1,18 @@
+[chain]
+# endpoint="https://civilian.testnet.cpchain.io"
+# chainID=41
+
+endpoint="https://civilian.cpchain.io"
+chainID=337
+
+[wallet]
+# The path of your keystore file
+keystore="../keystore/0xC192d3AE30F75663f8570F05b7796D5d508cb029.json"
+# You can specify the password in configuration (Only in DEVELOPMENT and TESTING, this is unsafe)
+password="123456"
+
+[contract]
+# built-contract is the path of the built JSON file by truffle
+builtContract="../cpchain-dapps-handgame"
+# After the contract is deployed, you can specify this field when you need to call the contract
+contractAddress=""
