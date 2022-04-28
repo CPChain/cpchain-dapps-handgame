@@ -1,11 +1,13 @@
 // Deploy Example
 var Game = artifacts.require("./Game.sol");
 var RPS = artifacts.require("./RPS.sol");
+var Card = artifacts.require("./Card.sol");
 module.exports = function (deployer) {
     deployer.deploy(RPS).then(async () => {
         try {
             const rps = await RPS.deployed()
-            const game = await deployer.deploy(Game, rps.address); //"参数在第二个变量携带"  
+            const card = await Card.deployed()
+            await deployer.deploy(Game, rps.address, card.address); //"参数在第二个变量携带"  
         } catch (error) {
             console.warn(error)
         }

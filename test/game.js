@@ -12,8 +12,6 @@ contract("Test Game ", (accounts) => {
         const maxLimit = await instance.maxLimit()
         const timeoutLimit = await instance.timeoutLimit()
 
-        const address = await instance.RPSAddress()
-        console.log(111111111111, rps.address, address)
         assert.equal(web3.utils.fromWei(maxLimit), 1000)
         assert.equal(timeoutLimit, 10 * 60)
     })
@@ -77,7 +75,6 @@ contract("Test Game ", (accounts) => {
             });
             gasUsed[1] = gasUsed[1] + r.receipt.gasUsed
         } catch (error) {
-            console.log(error)
         }
 
 
@@ -209,7 +206,6 @@ contract("Test Game ", (accounts) => {
             await instance.cancelGame(gameId, { from: accounts[1] })
             assert.fail()
         } catch (error) {
-            console.log(error)
             assert.ok(error.toString().includes('need game player'))
         }
     })
@@ -314,7 +310,6 @@ contract("Test Game ", (accounts) => {
                 return ev[0] == gameId3 && ev[1] == 0
             });
         } catch (error) {
-            console.log(error)
             assert.fail()
         }
     })
@@ -367,7 +362,6 @@ contract("Test Game ", (accounts) => {
             const r2 = await instance.openCard(gameId4, key2, content2, { from: accounts[2] })
             assert.fail()
         } catch (error) {
-            console.log(error)
             assert.ok(error.toString().includes('wrong key or content'))
         }
     })
