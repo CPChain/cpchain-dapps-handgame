@@ -40,29 +40,6 @@
     },
     {
       "constant": false,
-      "inputs": [
-        {
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferRPS",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
       "inputs": [],
       "name": "setMintContract",
       "outputs": [],
@@ -76,20 +53,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IRPS {\n    function mintRPS(address account, uint256 amount) external;\n\n    /**\n     * @dev Returns the amount of tokens owned by `account`.\n     */\n    function balanceOfRPS(address account) external view returns (uint256);\n\n    /**\n     * @dev Moves `amount` tokens from the caller's account to `to`.\n     *\n     * Returns a boolean value indicating whether the operation succeeded.\n     *\n     * Emits a {Transfer} event.\n     */\n    function transferRPS(address to, uint256 amount) external returns (bool);\n\n    function setMintContract() external;\n}\n",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IRPS {\n    function mintRPS(address account, uint256 amount) external;\n\n    /**\n     * @dev Returns the amount of tokens owned by `account`.\n     */\n    function balanceOfRPS(address account) external view returns (uint256);\n \n\n    function setMintContract() external;\n}\n",
   "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IRPS.sol",
   "ast": {
-    "absolutePath": "project:/contracts/interfaces/IRPS.sol",
+    "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IRPS.sol",
     "exportedSymbols": {
       "IRPS": [
-        2622
+        1635
       ]
     },
-    "id": 2623,
+    "id": 1636,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2595,
+        "id": 1617,
         "literals": [
           "solidity",
           ">=",
@@ -100,7 +77,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:13"
+        "src": "32:32:6"
       },
       {
         "baseContracts": [],
@@ -108,9 +85,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2622,
+        "id": 1635,
         "linearizedBaseContracts": [
-          2622
+          1635
         ],
         "name": "IRPS",
         "nodeType": "ContractDefinition",
@@ -118,7 +95,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2602,
+            "id": 1624,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -126,16 +103,16 @@
             "name": "mintRPS",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2600,
+              "id": 1622,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2597,
+                  "id": 1619,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2602,
-                  "src": "104:15:13",
+                  "scope": 1624,
+                  "src": "104:15:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -143,10 +120,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2596,
+                    "id": 1618,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:7:13",
+                    "src": "104:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -157,11 +134,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2599,
+                  "id": 1621,
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2602,
-                  "src": "121:14:13",
+                  "scope": 1624,
+                  "src": "121:14:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -169,10 +146,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2598,
+                    "id": 1620,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "121:7:13",
+                    "src": "121:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -182,17 +159,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "103:33:13"
+              "src": "103:33:6"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2601,
+              "id": 1623,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "145:0:13"
+              "src": "145:0:6"
             },
-            "scope": 2622,
-            "src": "87:59:13",
+            "scope": 1635,
+            "src": "87:59:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -200,7 +177,7 @@
           {
             "body": null,
             "documentation": "@dev Returns the amount of tokens owned by `account`.",
-            "id": 2609,
+            "id": 1631,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -208,16 +185,16 @@
             "name": "balanceOfRPS",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2605,
+              "id": 1627,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2604,
+                  "id": 1626,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2609,
-                  "src": "251:15:13",
+                  "scope": 1631,
+                  "src": "251:15:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -225,10 +202,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2603,
+                    "id": 1625,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "251:7:13",
+                    "src": "251:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -238,20 +215,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "250:17:13"
+              "src": "250:17:6"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2608,
+              "id": 1630,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2607,
+                  "id": 1629,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2609,
-                  "src": "291:7:13",
+                  "scope": 1631,
+                  "src": "291:7:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -259,10 +236,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2606,
+                    "id": 1628,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "291:7:13",
+                    "src": "291:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -272,127 +249,18 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "290:9:13"
+              "src": "290:9:6"
             },
-            "scope": 2622,
-            "src": "229:71:13",
+            "scope": 1635,
+            "src": "229:71:6",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "@dev Moves `amount` tokens from the caller's account to `to`.\n     * Returns a boolean value indicating whether the operation succeeded.\n     * Emits a {Transfer} event.",
-            "id": 2618,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "transferRPS",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2614,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 2611,
-                  "name": "to",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2618,
-                  "src": "534:10:13",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 2610,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "534:7:13",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 2613,
-                  "name": "amount",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2618,
-                  "src": "546:14:13",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 2612,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "546:7:13",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "533:28:13"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2617,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 2616,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 2618,
-                  "src": "580:4:13",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 2615,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "580:4:13",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "579:6:13"
-            },
-            "scope": 2622,
-            "src": "513:73:13",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
             "documentation": null,
-            "id": 2621,
+            "id": 1634,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -400,37 +268,37 @@
             "name": "setMintContract",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2619,
+              "id": 1632,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "616:2:13"
+              "src": "332:2:6"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2620,
+              "id": 1633,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "627:0:13"
+              "src": "343:0:6"
             },
-            "scope": 2622,
-            "src": "592:36:13",
+            "scope": 1635,
+            "src": "308:36:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2623,
-        "src": "66:564:13"
+        "scope": 1636,
+        "src": "66:280:6"
       }
     ],
-    "src": "32:599:13"
+    "src": "32:315:6"
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "project:/contracts/interfaces/IRPS.sol",
+      "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IRPS.sol",
       "exportedSymbols": {
         "IRPS": [
-          2622
+          1635
         ]
       }
     },
@@ -447,9 +315,9 @@
             ".0"
           ]
         },
-        "id": 2595,
+        "id": 1617,
         "name": "PragmaDirective",
-        "src": "32:32:13"
+        "src": "32:32:6"
       },
       {
         "attributes": {
@@ -463,10 +331,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            2622
+            1635
           ],
           "name": "IRPS",
-          "scope": 2623
+          "scope": 1636
         },
         "children": [
           {
@@ -481,7 +349,7 @@
               ],
               "name": "mintRPS",
               "payable": false,
-              "scope": 2622,
+              "scope": 1635,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -493,7 +361,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "account",
-                      "scope": 2602,
+                      "scope": 1624,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -506,20 +374,20 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2596,
+                        "id": 1618,
                         "name": "ElementaryTypeName",
-                        "src": "104:7:13"
+                        "src": "104:7:6"
                       }
                     ],
-                    "id": 2597,
+                    "id": 1619,
                     "name": "VariableDeclaration",
-                    "src": "104:15:13"
+                    "src": "104:15:6"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "amount",
-                      "scope": 2602,
+                      "scope": 1624,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -532,19 +400,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2598,
+                        "id": 1620,
                         "name": "ElementaryTypeName",
-                        "src": "121:7:13"
+                        "src": "121:7:6"
                       }
                     ],
-                    "id": 2599,
+                    "id": 1621,
                     "name": "VariableDeclaration",
-                    "src": "121:14:13"
+                    "src": "121:14:6"
                   }
                 ],
-                "id": 2600,
+                "id": 1622,
                 "name": "ParameterList",
-                "src": "103:33:13"
+                "src": "103:33:6"
               },
               {
                 "attributes": {
@@ -553,14 +421,14 @@
                   ]
                 },
                 "children": [],
-                "id": 2601,
+                "id": 1623,
                 "name": "ParameterList",
-                "src": "145:0:13"
+                "src": "145:0:6"
               }
             ],
-            "id": 2602,
+            "id": 1624,
             "name": "FunctionDefinition",
-            "src": "87:59:13"
+            "src": "87:59:6"
           },
           {
             "attributes": {
@@ -574,7 +442,7 @@
               ],
               "name": "balanceOfRPS",
               "payable": false,
-              "scope": 2622,
+              "scope": 1635,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "external"
@@ -586,7 +454,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "account",
-                      "scope": 2609,
+                      "scope": 1631,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -599,19 +467,19 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2603,
+                        "id": 1625,
                         "name": "ElementaryTypeName",
-                        "src": "251:7:13"
+                        "src": "251:7:6"
                       }
                     ],
-                    "id": 2604,
+                    "id": 1626,
                     "name": "VariableDeclaration",
-                    "src": "251:15:13"
+                    "src": "251:15:6"
                   }
                 ],
-                "id": 2605,
+                "id": 1627,
                 "name": "ParameterList",
-                "src": "250:17:13"
+                "src": "250:17:6"
               },
               {
                 "children": [
@@ -619,7 +487,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 2609,
+                      "scope": 1631,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -632,139 +500,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2606,
+                        "id": 1628,
                         "name": "ElementaryTypeName",
-                        "src": "291:7:13"
+                        "src": "291:7:6"
                       }
                     ],
-                    "id": 2607,
+                    "id": 1629,
                     "name": "VariableDeclaration",
-                    "src": "291:7:13"
+                    "src": "291:7:6"
                   }
                 ],
-                "id": 2608,
+                "id": 1630,
                 "name": "ParameterList",
-                "src": "290:9:13"
+                "src": "290:9:6"
               }
             ],
-            "id": 2609,
+            "id": 1631,
             "name": "FunctionDefinition",
-            "src": "229:71:13"
-          },
-          {
-            "attributes": {
-              "body": null,
-              "constant": false,
-              "documentation": "@dev Moves `amount` tokens from the caller's account to `to`.\n     * Returns a boolean value indicating whether the operation succeeded.\n     * Emits a {Transfer} event.",
-              "implemented": false,
-              "isConstructor": false,
-              "modifiers": [
-                null
-              ],
-              "name": "transferRPS",
-              "payable": false,
-              "scope": 2622,
-              "stateMutability": "nonpayable",
-              "superFunction": null,
-              "visibility": "external"
-            },
-            "children": [
-              {
-                "children": [
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "to",
-                      "scope": 2618,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "address",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "address",
-                          "type": "address"
-                        },
-                        "id": 2610,
-                        "name": "ElementaryTypeName",
-                        "src": "534:7:13"
-                      }
-                    ],
-                    "id": 2611,
-                    "name": "VariableDeclaration",
-                    "src": "534:10:13"
-                  },
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "amount",
-                      "scope": 2618,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 2612,
-                        "name": "ElementaryTypeName",
-                        "src": "546:7:13"
-                      }
-                    ],
-                    "id": 2613,
-                    "name": "VariableDeclaration",
-                    "src": "546:14:13"
-                  }
-                ],
-                "id": 2614,
-                "name": "ParameterList",
-                "src": "533:28:13"
-              },
-              {
-                "children": [
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "",
-                      "scope": 2618,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "bool",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "bool",
-                          "type": "bool"
-                        },
-                        "id": 2615,
-                        "name": "ElementaryTypeName",
-                        "src": "580:4:13"
-                      }
-                    ],
-                    "id": 2616,
-                    "name": "VariableDeclaration",
-                    "src": "580:4:13"
-                  }
-                ],
-                "id": 2617,
-                "name": "ParameterList",
-                "src": "579:6:13"
-              }
-            ],
-            "id": 2618,
-            "name": "FunctionDefinition",
-            "src": "513:73:13"
+            "src": "229:71:6"
           },
           {
             "attributes": {
@@ -778,7 +531,7 @@
               ],
               "name": "setMintContract",
               "payable": false,
-              "scope": 2622,
+              "scope": 1635,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -791,9 +544,9 @@
                   ]
                 },
                 "children": [],
-                "id": 2619,
+                "id": 1632,
                 "name": "ParameterList",
-                "src": "616:2:13"
+                "src": "332:2:6"
               },
               {
                 "attributes": {
@@ -802,39 +555,36 @@
                   ]
                 },
                 "children": [],
-                "id": 2620,
+                "id": 1633,
                 "name": "ParameterList",
-                "src": "627:0:13"
+                "src": "343:0:6"
               }
             ],
-            "id": 2621,
+            "id": 1634,
             "name": "FunctionDefinition",
-            "src": "592:36:13"
+            "src": "308:36:6"
           }
         ],
-        "id": 2622,
+        "id": 1635,
         "name": "ContractDefinition",
-        "src": "66:564:13"
+        "src": "66:280:6"
       }
     ],
-    "id": 2623,
+    "id": 1636,
     "name": "SourceUnit",
-    "src": "32:599:13"
+    "src": "32:315:6"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.25+commit.59dbf8f1.Linux.g++"
   },
   "networks": {},
-  "schemaVersion": "3.4.7",
-  "updatedAt": "2022-05-04T08:05:18.951Z",
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2022-05-05T14:15:59.396Z",
   "devdoc": {
     "methods": {
       "balanceOfRPS(address)": {
         "details": "Returns the amount of tokens owned by `account`."
-      },
-      "transferRPS(address,uint256)": {
-        "details": "Moves `amount` tokens from the caller's account to `to`.     * Returns a boolean value indicating whether the operation succeeded.     * Emits a {Transfer} event."
       }
     }
   },

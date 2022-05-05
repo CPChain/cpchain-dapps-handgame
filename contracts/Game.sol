@@ -262,7 +262,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
 
     function balanceOf(address account) public view returns (uint256) {
         return RPSInstance.balanceOfRPS(account);
-    } 
+    }
+
     // private methods
 
     function _notifyGroup(uint256 group_id, uint64 gameId)

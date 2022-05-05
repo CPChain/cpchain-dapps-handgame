@@ -2,6 +2,23 @@
   "contractName": "IGroupChat",
   "abi": [
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "message",
+          "type": "string"
+        }
+      ],
+      "name": "TestSendMessage",
+      "type": "event"
+    },
+    {
       "constant": false,
       "inputs": [
         {
@@ -71,28 +88,31 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.24;\n\ninterface IGroupChat {\n    /**\n     * Send Message to a chat\n     * The formation of message need to reference: https://github.com/CPChain/cpchain-dapps-message#methods\n     * Emits a {SendMessage} event\n     */\n    function sendMessage(uint id, string message) external;\n\n    /**\n     * Check a member whether is banned\n     */\n    function isBanned(uint id, address member) external view returns(bool);\n\n    /**\n     * Check a group if has this member\n     */\n    function has(uint id, address member) external view returns(bool);\n}",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IGroupChat {\n    /**\n     * Send Message to a chat\n     * The formation of message need to reference: https://github.com/CPChain/cpchain-dapps-message#methods\n     * Emits a {SendMessage} event\n     */\n    event TestSendMessage(uint256 id, string message);\n\n    function sendMessage(uint256 id, string   message) external;\n\n    /**\n     * Check a member whether is banned\n     */\n    function isBanned(uint256 id, address member) external view returns (bool);\n\n    /**\n     * Check a group if has this member\n     */\n    function has(uint256 id, address member) external view returns (bool);\n}\n",
   "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGroupChat.sol",
   "ast": {
-    "absolutePath": "project:/contracts/interfaces/IGroupChat.sol",
+    "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGroupChat.sol",
     "exportedSymbols": {
       "IGroupChat": [
-        2722
+        1591
       ]
     },
-    "id": 2723,
+    "id": 1592,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2696,
+        "id": 1559,
         "literals": [
           "solidity",
-          "^",
+          ">=",
           "0.4",
-          ".24"
+          ".22",
+          "<",
+          "0.9",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:8"
+        "src": "32:32:4"
       },
       {
         "baseContracts": [],
@@ -100,34 +120,31 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2722,
+        "id": 1591,
         "linearizedBaseContracts": [
-          2722
+          1591
         ],
         "name": "IGroupChat",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "body": null,
+            "anonymous": false,
             "documentation": "Send Message to a chat\nThe formation of message need to reference: https://github.com/CPChain/cpchain-dapps-message#methods\nEmits a {SendMessage} event",
-            "id": 2703,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "sendMessage",
-            "nodeType": "FunctionDefinition",
+            "id": 1565,
+            "name": "TestSendMessage",
+            "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2701,
+              "id": 1564,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2698,
+                  "id": 1561,
+                  "indexed": false,
                   "name": "id",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2703,
-                  "src": "263:7:8",
+                  "scope": 1565,
+                  "src": "304:10:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -135,10 +152,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2697,
-                    "name": "uint",
+                    "id": 1560,
+                    "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "263:4:8",
+                    "src": "304:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -149,22 +166,23 @@
                 },
                 {
                   "constant": false,
-                  "id": 2700,
+                  "id": 1563,
+                  "indexed": false,
                   "name": "message",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2703,
-                  "src": "272:14:8",
+                  "scope": 1565,
+                  "src": "316:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeIdentifier": "t_string_memory_ptr",
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2699,
+                    "id": 1562,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "272:6:8",
+                    "src": "316:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -174,17 +192,88 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "262:25:8"
+              "src": "303:28:4"
+            },
+            "src": "282:50:4"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 1572,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "sendMessage",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1570,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1567,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1572,
+                  "src": "359:10:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1566,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "359:7:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1569,
+                  "name": "message",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1572,
+                  "src": "371:16:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 1568,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "371:6:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "358:30:4"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2702,
+              "id": 1571,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "296:0:8"
+              "src": "397:0:4"
             },
-            "scope": 2722,
-            "src": "242:55:8",
+            "scope": 1591,
+            "src": "338:60:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -192,7 +281,7 @@
           {
             "body": null,
             "documentation": "Check a member whether is banned",
-            "id": 2712,
+            "id": 1581,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -200,16 +289,16 @@
             "name": "isBanned",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2708,
+              "id": 1577,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2705,
+                  "id": 1574,
                   "name": "id",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2712,
-                  "src": "377:7:8",
+                  "scope": 1581,
+                  "src": "478:10:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -217,10 +306,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2704,
-                    "name": "uint",
+                    "id": 1573,
+                    "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "377:4:8",
+                    "src": "478:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -231,11 +320,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2707,
+                  "id": 1576,
                   "name": "member",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2712,
-                  "src": "386:14:8",
+                  "scope": 1581,
+                  "src": "490:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -243,10 +332,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2706,
+                    "id": 1575,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "386:7:8",
+                    "src": "490:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -256,20 +345,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "376:25:8"
+              "src": "477:28:4"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2711,
+              "id": 1580,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2710,
+                  "id": 1579,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2712,
-                  "src": "424:4:8",
+                  "scope": 1581,
+                  "src": "529:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -277,10 +366,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2709,
+                    "id": 1578,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "424:4:8",
+                    "src": "529:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -290,10 +379,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "423:6:8"
+              "src": "528:6:4"
             },
-            "scope": 2722,
-            "src": "359:71:8",
+            "scope": 1591,
+            "src": "460:75:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -301,7 +390,7 @@
           {
             "body": null,
             "documentation": "Check a group if has this member",
-            "id": 2721,
+            "id": 1590,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -309,16 +398,16 @@
             "name": "has",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2717,
+              "id": 1586,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2714,
+                  "id": 1583,
                   "name": "id",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2721,
-                  "src": "505:7:8",
+                  "scope": 1590,
+                  "src": "610:10:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -326,10 +415,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2713,
-                    "name": "uint",
+                    "id": 1582,
+                    "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "505:4:8",
+                    "src": "610:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -340,11 +429,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2716,
+                  "id": 1585,
                   "name": "member",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2721,
-                  "src": "514:14:8",
+                  "scope": 1590,
+                  "src": "622:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -352,10 +441,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2715,
+                    "id": 1584,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "514:7:8",
+                    "src": "622:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -365,20 +454,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "504:25:8"
+              "src": "609:28:4"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2720,
+              "id": 1589,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2719,
+                  "id": 1588,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2721,
-                  "src": "552:4:8",
+                  "scope": 1590,
+                  "src": "661:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -386,10 +475,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2718,
+                    "id": 1587,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "552:4:8",
+                    "src": "661:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -399,27 +488,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "551:6:8"
+              "src": "660:6:4"
             },
-            "scope": 2722,
-            "src": "492:66:8",
+            "scope": 1591,
+            "src": "597:70:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2723,
-        "src": "26:534:8"
+        "scope": 1592,
+        "src": "66:603:4"
       }
     ],
-    "src": "0:560:8"
+    "src": "32:638:4"
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "project:/contracts/interfaces/IGroupChat.sol",
+      "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGroupChat.sol",
       "exportedSymbols": {
         "IGroupChat": [
-          2722
+          1591
         ]
       }
     },
@@ -428,14 +517,17 @@
         "attributes": {
           "literals": [
             "solidity",
-            "^",
+            ">=",
             "0.4",
-            ".24"
+            ".22",
+            "<",
+            "0.9",
+            ".0"
           ]
         },
-        "id": 2696,
+        "id": 1559,
         "name": "PragmaDirective",
-        "src": "0:24:8"
+        "src": "32:32:4"
       },
       {
         "attributes": {
@@ -449,28 +541,17 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            2722
+            1591
           ],
           "name": "IGroupChat",
-          "scope": 2723
+          "scope": 1592
         },
         "children": [
           {
             "attributes": {
-              "body": null,
-              "constant": false,
+              "anonymous": false,
               "documentation": "Send Message to a chat\nThe formation of message need to reference: https://github.com/CPChain/cpchain-dapps-message#methods\nEmits a {SendMessage} event",
-              "implemented": false,
-              "isConstructor": false,
-              "modifiers": [
-                null
-              ],
-              "name": "sendMessage",
-              "payable": false,
-              "scope": 2722,
-              "stateMutability": "nonpayable",
-              "superFunction": null,
-              "visibility": "external"
+              "name": "TestSendMessage"
             },
             "children": [
               {
@@ -478,8 +559,9 @@
                   {
                     "attributes": {
                       "constant": false,
+                      "indexed": false,
                       "name": "id",
-                      "scope": 2703,
+                      "scope": 1565,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -489,23 +571,24 @@
                     "children": [
                       {
                         "attributes": {
-                          "name": "uint",
+                          "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2697,
+                        "id": 1560,
                         "name": "ElementaryTypeName",
-                        "src": "263:4:8"
+                        "src": "304:7:4"
                       }
                     ],
-                    "id": 2698,
+                    "id": 1561,
                     "name": "VariableDeclaration",
-                    "src": "263:7:8"
+                    "src": "304:10:4"
                   },
                   {
                     "attributes": {
                       "constant": false,
+                      "indexed": false,
                       "name": "message",
-                      "scope": 2703,
+                      "scope": 1565,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "string",
@@ -518,19 +601,101 @@
                           "name": "string",
                           "type": "string"
                         },
-                        "id": 2699,
+                        "id": 1562,
                         "name": "ElementaryTypeName",
-                        "src": "272:6:8"
+                        "src": "316:6:4"
                       }
                     ],
-                    "id": 2700,
+                    "id": 1563,
                     "name": "VariableDeclaration",
-                    "src": "272:14:8"
+                    "src": "316:14:4"
                   }
                 ],
-                "id": 2701,
+                "id": 1564,
                 "name": "ParameterList",
-                "src": "262:25:8"
+                "src": "303:28:4"
+              }
+            ],
+            "id": 1565,
+            "name": "EventDefinition",
+            "src": "282:50:4"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "sendMessage",
+              "payable": false,
+              "scope": 1591,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "id",
+                      "scope": 1572,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1566,
+                        "name": "ElementaryTypeName",
+                        "src": "359:7:4"
+                      }
+                    ],
+                    "id": 1567,
+                    "name": "VariableDeclaration",
+                    "src": "359:10:4"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "message",
+                      "scope": 1572,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "string",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "string",
+                          "type": "string"
+                        },
+                        "id": 1568,
+                        "name": "ElementaryTypeName",
+                        "src": "371:6:4"
+                      }
+                    ],
+                    "id": 1569,
+                    "name": "VariableDeclaration",
+                    "src": "371:16:4"
+                  }
+                ],
+                "id": 1570,
+                "name": "ParameterList",
+                "src": "358:30:4"
               },
               {
                 "attributes": {
@@ -539,14 +704,14 @@
                   ]
                 },
                 "children": [],
-                "id": 2702,
+                "id": 1571,
                 "name": "ParameterList",
-                "src": "296:0:8"
+                "src": "397:0:4"
               }
             ],
-            "id": 2703,
+            "id": 1572,
             "name": "FunctionDefinition",
-            "src": "242:55:8"
+            "src": "338:60:4"
           },
           {
             "attributes": {
@@ -560,7 +725,7 @@
               ],
               "name": "isBanned",
               "payable": false,
-              "scope": 2722,
+              "scope": 1591,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "external"
@@ -572,7 +737,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "id",
-                      "scope": 2712,
+                      "scope": 1581,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -582,23 +747,23 @@
                     "children": [
                       {
                         "attributes": {
-                          "name": "uint",
+                          "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2704,
+                        "id": 1573,
                         "name": "ElementaryTypeName",
-                        "src": "377:4:8"
+                        "src": "478:7:4"
                       }
                     ],
-                    "id": 2705,
+                    "id": 1574,
                     "name": "VariableDeclaration",
-                    "src": "377:7:8"
+                    "src": "478:10:4"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "member",
-                      "scope": 2712,
+                      "scope": 1581,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -611,19 +776,19 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2706,
+                        "id": 1575,
                         "name": "ElementaryTypeName",
-                        "src": "386:7:8"
+                        "src": "490:7:4"
                       }
                     ],
-                    "id": 2707,
+                    "id": 1576,
                     "name": "VariableDeclaration",
-                    "src": "386:14:8"
+                    "src": "490:14:4"
                   }
                 ],
-                "id": 2708,
+                "id": 1577,
                 "name": "ParameterList",
-                "src": "376:25:8"
+                "src": "477:28:4"
               },
               {
                 "children": [
@@ -631,7 +796,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 2712,
+                      "scope": 1581,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -644,24 +809,24 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 2709,
+                        "id": 1578,
                         "name": "ElementaryTypeName",
-                        "src": "424:4:8"
+                        "src": "529:4:4"
                       }
                     ],
-                    "id": 2710,
+                    "id": 1579,
                     "name": "VariableDeclaration",
-                    "src": "424:4:8"
+                    "src": "529:4:4"
                   }
                 ],
-                "id": 2711,
+                "id": 1580,
                 "name": "ParameterList",
-                "src": "423:6:8"
+                "src": "528:6:4"
               }
             ],
-            "id": 2712,
+            "id": 1581,
             "name": "FunctionDefinition",
-            "src": "359:71:8"
+            "src": "460:75:4"
           },
           {
             "attributes": {
@@ -675,7 +840,7 @@
               ],
               "name": "has",
               "payable": false,
-              "scope": 2722,
+              "scope": 1591,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "external"
@@ -687,7 +852,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "id",
-                      "scope": 2721,
+                      "scope": 1590,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -697,23 +862,23 @@
                     "children": [
                       {
                         "attributes": {
-                          "name": "uint",
+                          "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2713,
+                        "id": 1582,
                         "name": "ElementaryTypeName",
-                        "src": "505:4:8"
+                        "src": "610:7:4"
                       }
                     ],
-                    "id": 2714,
+                    "id": 1583,
                     "name": "VariableDeclaration",
-                    "src": "505:7:8"
+                    "src": "610:10:4"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "name": "member",
-                      "scope": 2721,
+                      "scope": 1590,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -726,19 +891,19 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2715,
+                        "id": 1584,
                         "name": "ElementaryTypeName",
-                        "src": "514:7:8"
+                        "src": "622:7:4"
                       }
                     ],
-                    "id": 2716,
+                    "id": 1585,
                     "name": "VariableDeclaration",
-                    "src": "514:14:8"
+                    "src": "622:14:4"
                   }
                 ],
-                "id": 2717,
+                "id": 1586,
                 "name": "ParameterList",
-                "src": "504:25:8"
+                "src": "609:28:4"
               },
               {
                 "children": [
@@ -746,7 +911,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "",
-                      "scope": 2721,
+                      "scope": 1590,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -759,42 +924,42 @@
                           "name": "bool",
                           "type": "bool"
                         },
-                        "id": 2718,
+                        "id": 1587,
                         "name": "ElementaryTypeName",
-                        "src": "552:4:8"
+                        "src": "661:4:4"
                       }
                     ],
-                    "id": 2719,
+                    "id": 1588,
                     "name": "VariableDeclaration",
-                    "src": "552:4:8"
+                    "src": "661:4:4"
                   }
                 ],
-                "id": 2720,
+                "id": 1589,
                 "name": "ParameterList",
-                "src": "551:6:8"
+                "src": "660:6:4"
               }
             ],
-            "id": 2721,
+            "id": 1590,
             "name": "FunctionDefinition",
-            "src": "492:66:8"
+            "src": "597:70:4"
           }
         ],
-        "id": 2722,
+        "id": 1591,
         "name": "ContractDefinition",
-        "src": "26:534:8"
+        "src": "66:603:4"
       }
     ],
-    "id": 2723,
+    "id": 1592,
     "name": "SourceUnit",
-    "src": "0:560:8"
+    "src": "32:638:4"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.25+commit.59dbf8f1.Linux.g++"
   },
   "networks": {},
-  "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-25T08:53:51.913Z",
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2022-05-05T14:15:59.395Z",
   "devdoc": {
     "methods": {}
   },
@@ -805,9 +970,6 @@
       },
       "isBanned(uint256,address)": {
         "notice": "Check a member whether is banned"
-      },
-      "sendMessage(uint256,string)": {
-        "notice": "Send Message to a chat The formation of message need to reference: https://github.com/CPChain/cpchain-dapps-message#methods Emits a {SendMessage} event"
       }
     }
   }
