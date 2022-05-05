@@ -31,7 +31,7 @@ contract RPS is ERC20, Ownable, IRPS {
         return transfer(recipient, amount);
     }
 
-    function setMintContract() {
+    function setMintContract() external {
         require(owner == tx.origin, "need origin is owner");
         _mintAddress = msg.sender;
     }

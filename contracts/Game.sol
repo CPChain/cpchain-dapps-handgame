@@ -5,10 +5,12 @@ import "./interfaces/IPlayer.sol";
 import "./interfaces/IStarter.sol";
 import "./interfaces/IGroupChat.sol";
 import "./interfaces/IRPS.sol";
-import "./interfaces/ICard.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
+import "@cpchain-tools/cpchain-dapps-utils/contracts/security/Verifiable.sol";
 
-contract Game is IGame, IStarter, IPlayer, Enable {
+//1 Rock  2 Paper 3 Scissors  0 unknown
+
+contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 10 minutes;
     uint64 public totalGameNumber = 0;
@@ -17,20 +19,12 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     address public groupChatAddress;
     IGroupChat private groupchatInstance;
     IRPS private RPSInstance;
-    ICard private cardInstance;
 
-    constructor(address rps,address cardContractAddress) public {
+    constructor(address rps) public {
         RPSInstance = IRPS(rps);
         RPSInstance.setMintContract();
-        cardInstance = ICard(cardContractAddress);
     }
 
-    struct GameCard {
-        uint256 card;
-        string key;
-        //1 Rock  2 Paper 3 Scissors  0 unknown
-        uint8 content;
-    }
     struct HandGame {
         uint64 gameId;
         uint256 amount;
@@ -38,8 +32,8 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         address player;
         //0 started, 1 locked,2,finished,3 cancel,
         uint8 status;
-        GameCard starterCard;
-        GameCard playerCard;
+        uint256 starterProof;
+        uint256 playerProof;
         uint256 timeout;
         uint256 threshold;
     }
@@ -113,16 +107,25 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             address,
             uint8,
             uint256,
-            uint256,
-            string,
-            uint8,
-            uint256,
-            string,
-            uint8
+            uint256[]
         )
     {
         require(gameId < totalGameNumber, "wrong game id");
         HandGame memory game = games[gameId];
+        (uint256 starterKey, uint256 starterContent) = viewContent(
+            game.starterProof
+        );
+        (uint256 playerKey, uint256 playerContent) = viewContent(
+            game.playerProof
+        );
+
+        uint256[] memory cardsInfo = new uint256[](6);
+        cardsInfo[0] = game.starterProof;
+        cardsInfo[1] = starterKey;
+        cardsInfo[2] = starterContent;
+        cardsInfo[3] = game.playerProof;
+        cardsInfo[4] = playerKey;
+        cardsInfo[5] = playerContent;
         return (
             game.amount,
             game.threshold,
@@ -130,12 +133,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
             game.player,
             game.status,
             game.timeout,
-            game.starterCard.card,
-            game.starterCard.key,
-            game.starterCard.content,
-            game.playerCard.card,
-            game.playerCard.key,
-            game.playerCard.content
+            cardsInfo
         );
     }
 
@@ -161,21 +159,21 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     }
 
     // game starter methods
-    function startGame(uint256 card, uint256 threshold)
+    function startGame(uint256 proof, uint256 threshold)
         external
         payable
         onlyEnabled
     {
-        _createGame(card, threshold);
+        _createGame(proof, threshold);
     }
 
     function startGroupChatGame(
-        uint256 card,
+        uint256 proof,
         uint256 threshold,
         uint256 group_id,
         string userMessage
     ) external payable onlyActivatedGroupMember(group_id) onlyEnabled {
-        uint64 gameId = _createGame(card, threshold);
+        uint64 gameId = _createGame(proof, threshold);
         gameToGroup[gameId] = group_id;
         _notifyGroup(group_id, gameId);
         emit CreateGroupHandGame(
@@ -201,7 +199,7 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     }
 
     // player methods
-    function joinGame(uint64 gameId, uint256 card)
+    function joinGame(uint64 gameId, uint256 proof)
         external
         payable
         needGameStatus(gameId, 0)
@@ -209,36 +207,37 @@ contract Game is IGame, IStarter, IPlayer, Enable {
     {
         uint256 group_id = gameToGroup[gameId];
         if (group_id > 0) {
-            _lockGroupGame(gameId, card, group_id);
+            _lockGroupGame(gameId, proof, group_id);
         } else {
-            _lockGame(gameId, card);
+            _lockGame(gameId, proof);
         }
     }
 
     function openCard(
         uint64 gameId,
-        string key,
-        uint8 content
+        uint256 key,
+        uint256 content
     ) external onlyPlayer(gameId) needGameStatus(gameId, 1) {
         HandGame storage game = games[gameId];
-        GameCard storage card;
+        uint256 proof;
         if (game.starter == msg.sender) {
-            card = game.starterCard;
+            proof = game.starterProof;
         } else {
-            card = game.playerCard;
+            proof = game.playerProof;
         }
-        bool validate = _validateCard(card.card, key, content);
+        bool validate = validateProof(proof, key, content);
         require(validate, "wrong key or content");
-        card.key = key;
-        card.content = content;
-
+        // (, uint256 savedContent) = viewContent(game.starterProof);
+        // if (savedContent != 0) {
+        //     setProof(proof, key, content);
+        // }
+        setProof(proof, key, content);
         emit CardOpened(gameId, msg.sender, key, content);
 
-        if (game.starterCard.content != 0 && game.playerCard.content != 0) {
-            int8 r = _winOrLose(
-                game.starterCard.content,
-                game.playerCard.content
-            );
+        (, uint256 starterContent) = viewContent(game.starterProof);
+        (, uint256 playerContent) = viewContent(game.playerProof);
+        if (starterContent != 0 && playerContent != 0) {
+            int8 r = _winOrLose(starterContent, playerContent);
             _finishGame(gameId, r);
         }
     }
@@ -250,11 +249,11 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         onlyTimeout(gameId)
     {
         HandGame memory game = games[gameId];
-        GameCard memory starter = game.starterCard;
-        GameCard memory player = game.playerCard;
-        if (starter.content != 0) {
+        (, uint256 starterContent) = viewContent(game.starterProof);
+        (, uint256 playerContent) = viewContent(game.playerProof);
+        if (starterContent != 0) {
             _finishGame(gameId, 1);
-        } else if (player.content != 0) {
+        } else if (playerContent != 0) {
             _finishGame(gameId, -1);
         } else {
             _finishGame(gameId, 0);
@@ -289,50 +288,54 @@ contract Game is IGame, IStarter, IPlayer, Enable {
 
     function _lockGroupGame(
         uint64 gameId,
-        uint256 card,
+        uint256 proof,
         uint256 group_id
     ) private onlyActivatedGroupMember(group_id) {
-        _lockGame(gameId, card);
+        _lockGame(gameId, proof);
     }
 
-    function _lockGame(uint64 gameId, uint256 card) private {
+    function _lockGame(uint64 gameId, uint256 proof) private {
         HandGame storage game = games[gameId];
-        GameCard memory playerCard = GameCard(card, "", 0);
+
         require(msg.value >= game.threshold, "wrong balance");
         // 退款
         if (msg.value > game.threshold) {
             msg.sender.transfer(msg.value - game.threshold);
         }
         game.player = msg.sender;
-        game.playerCard = playerCard;
+        game.playerProof = proof;
         game.amount = game.amount + game.threshold;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
         _mintRPS(game.starter, 2);
         _mintRPS(game.player, 1);
-        emit GameLocked(gameId, msg.sender, card, game.threshold);
+        emit GameLocked(gameId, msg.sender, proof, game.threshold);
     }
 
-    function _createGame(uint256 card, uint256 threshold)
+    function _createGame(uint256 proof, uint256 threshold)
         private
         returns (uint64)
     {
-        GameCard memory starter = GameCard(card, "", 0);
-        GameCard memory player = GameCard(0, "", 0);
         HandGame memory game = HandGame(
             totalGameNumber,
             msg.value,
             msg.sender,
             address(0),
             0,
-            starter,
-            player,
+            proof,
+            0,
             block.timestamp + timeoutLimit,
             threshold
         );
         totalGameNumber++;
         games.push(game);
-        emit GameStarted(game.gameId, game.starter, card, msg.value, threshold);
+        emit GameStarted(
+            game.gameId,
+            game.starter,
+            proof,
+            msg.value,
+            threshold
+        );
         return game.gameId;
     }
 
@@ -380,17 +383,9 @@ contract Game is IGame, IStarter, IPlayer, Enable {
         return (game.timeout <= block.timestamp);
     }
 
-    function _validateCard(
-        uint256 card,
-        string key,
-        uint8 content
-    ) private view returns (bool) {
-        return (card == uint256(keccak256(abi.encodePacked(key, content))));
-    }
-
-    function _winOrLose(uint8 playerContent, uint8 otherContent)
+    function _winOrLose(uint256 playerContent, uint256 otherContent)
         private
-        view
+        pure
         returns (int8)
     {
         int8 r = int8(playerContent - otherContent);

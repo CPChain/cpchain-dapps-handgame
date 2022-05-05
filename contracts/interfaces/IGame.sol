@@ -40,8 +40,8 @@ interface IGame {
     event CardOpened(
         uint64 indexed gameId,
         address player,
-        string key,
-        uint8 content
+        uint256 key,
+        uint256 content
     );
 
     event GameFinished(uint64 indexed gameId, int8 result);
