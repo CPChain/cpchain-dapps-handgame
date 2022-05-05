@@ -262,12 +262,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
 
     function balanceOf(address account) public view returns (uint256) {
         return RPSInstance.balanceOfRPS(account);
-    }
-
-    function transfer(address recipient, uint256 amount) public returns (bool) {
-        return RPSInstance.transferRPS(recipient, amount);
-    }
-
+    } 
     // private methods
 
     function _notifyGroup(uint256 group_id, uint64 gameId)
@@ -298,18 +293,15 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         HandGame storage game = games[gameId];
 
         require(msg.value >= game.threshold, "wrong balance");
-        // 退款
-        if (msg.value > game.threshold) {
-            msg.sender.transfer(msg.value - game.threshold);
-        }
+
         game.player = msg.sender;
         game.playerProof = proof;
-        game.amount = game.amount + game.threshold;
+        game.amount = game.amount + msg.value;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
         _mintRPS(game.starter, 2);
         _mintRPS(game.player, 1);
-        emit GameLocked(gameId, msg.sender, proof, game.threshold);
+        emit GameLocked(gameId, msg.sender, proof, msg.value);
     }
 
     function _createGame(uint256 proof, uint256 threshold)
@@ -340,7 +332,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     }
 
     function _mintRPS(address account, uint256 amount) private {
-        RPSInstance.mintRPS(account, amount);
+        RPSInstance.mintRPS(account, amount * 1 ether);
     }
 
     function uintToString(uint256 i) internal pure returns (string) {

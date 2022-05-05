@@ -8,15 +8,7 @@ interface IRPS {
      * @dev Returns the amount of tokens owned by `account`.
      */
     function balanceOfRPS(address account) external view returns (uint256);
-
-    /**
-     * @dev Moves `amount` tokens from the caller's account to `to`.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transferRPS(address to, uint256 amount) external returns (bool);
+ 
 
     function setMintContract() external;
 }
