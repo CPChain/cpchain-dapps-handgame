@@ -1,12 +1,13 @@
 {
     "scripts": {
-        "build": "truffle build",
-        "test": "truffle test",
-        "test:coverage": "truffle run coverage"
+        "build": "cross-env NODE_ENV=production   truffle build",
+        "test": "cross-env NODE_ENV=dev   truffle test",
+        "test:coverage": "cross-env NODE_ENV=dev   truffle run coverage"
     },
     "dependencies": {
         "@cpchain-tools/cpchain-dapps-utils": "0.0.7",
         "chai": "4.3.6",
+        "cross-env": "^7.0.3",
         "solidity-coverage": "0.7.16",
         "truffle": "5.3.2",
         "truffle-assertions": "0.9.2",
