@@ -100,12 +100,18 @@ contract("Test Game ", (accounts) => {
 
         const instance = await Game.deployed()
         const r = await instance.startGroupChatGame(card, web3.utils.toWei(new web3.utils.BN(5)), 1, 'yes', { value: web3.utils.toWei(new web3.utils.BN(5)) })
-
+ 
         truffleAssert.eventEmitted(r, 'CreateGroupHandGame', (ev) => {
             return ev[0] == 1 &&
                 ev[1] == 0
         });
 
+        truffleAssert.eventEmitted(r, 'TestSendMessage', (ev) => {
+            console.log(ev)
+            return true
+        });
+
+        
     })
 
     it("should join game failed for" + accounts[1], async () => {

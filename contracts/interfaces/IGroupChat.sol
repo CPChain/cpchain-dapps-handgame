@@ -9,7 +9,7 @@ interface IGroupChat {
      */
     event TestSendMessage(uint256 id, string message);
 
-    function sendMessage(uint256 id, string   message) external;
+    function sendMessage(uint256 id, string  message) external;
 
     /**
      * Check a member whether is banned
