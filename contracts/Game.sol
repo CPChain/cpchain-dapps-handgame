@@ -175,7 +175,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     ) external payable onlyActivatedGroupMember(group_id) onlyEnabled {
         uint64 gameId = _createGame(proof, threshold);
         gameToGroup[gameId] = group_id;
-        _notifyGroup(group_id, gameId,userMessage);
+        _notifyGroup(group_id, gameId, userMessage);
         emit CreateGroupHandGame(
             group_id,
             gameId,
@@ -264,22 +264,29 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         return RPSInstance.balanceOfRPS(account);
     }
 
-    // private methods 
-    function _notifyGroup(uint256 group_id, uint64 gameId,string userMessage)
-        internal
-        onlyActivatedGroupMember(group_id)
-    {
-        string memory message = _getMessageWithSeq(gameId,userMessage); 
+    // private methods
+    function _notifyGroup(
+        uint256 group_id,
+        uint64 gameId,
+        string userMessage
+    ) internal onlyActivatedGroupMember(group_id) {
+        string memory message = _getMessageWithSeq(gameId, userMessage);
         groupchatInstance.sendMessage(group_id, message);
     }
 
-// '{"message":{"seq":0yes},"type":"hanggame","version":"2.1"}'
-    function _getMessageWithSeq(uint256 seq,string userMessage) private pure returns (string) {
+    // '{"message":{"seq":0yes},"type":"hanggame","version":"2.1"}'
+    function _getMessageWithSeq(uint256 seq, string userMessage)
+        private
+        pure
+        returns (string)
+    {
         string memory _id = uintToString(seq);
         string memory msg0 = '{"message":{"seq":';
         string memory msgUser = ',"msg":"';
         string memory msg1 = '"},"type":"hanggame","version":"2.1"}';
-        string memory message = string(abi.encodePacked(msg0, _id,msgUser,userMessage, msg1));
+        string memory message = string(
+            abi.encodePacked(msg0, _id, msgUser, userMessage, msg1)
+        );
         return message;
     }
 
