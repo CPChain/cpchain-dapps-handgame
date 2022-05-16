@@ -264,28 +264,40 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         return RPSInstance.balanceOfRPS(account);
     }
 
+    // event TestSendMessage(string msg);
+
     // private methods
     function _notifyGroup(
         uint256 group_id,
         uint64 gameId,
         string userMessage
     ) internal onlyActivatedGroupMember(group_id) {
-        string memory message = _getMessageWithSeq(gameId, userMessage);
+        string memory message = _getMessage(gameId, userMessage, msg.sender);
         groupchatInstance.sendMessage(group_id, message);
+        // emit TestSendMessage(message);
     }
 
     // '{"message":{"seq":0yes},"type":"hanggame","version":"2.1"}'
-    function _getMessageWithSeq(uint256 seq, string userMessage)
-        private
-        pure
-        returns (string)
-    {
+    function _getMessage(
+        uint256 seq,
+        string userMessage,
+        address sender
+    ) private pure returns (string) {
         string memory _id = uintToString(seq);
-        string memory msg0 = '{"message":{"seq":';
+        string memory msg0 = '{"message":{"gameId":';
         string memory msgUser = ',"msg":"';
+        string memory msgSender = '","sender":"';
         string memory msg1 = '"},"type":"hanggame","version":"2.1"}';
         string memory message = string(
-            abi.encodePacked(msg0, _id, msgUser, userMessage, msg1)
+            abi.encodePacked(
+                msg0,
+                _id,
+                msgUser,
+                userMessage,
+                msgSender,
+                toAsciiString(sender),
+                msg1
+            )
         );
         return message;
     }
@@ -343,6 +355,25 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     function _mintRPS(address account, uint256 amount) private {
         RPSInstance.mintRPS(account, amount * 1 ether);
     }
+
+  
+
+   function toAsciiString(address x) internal pure returns (string memory) {
+    bytes memory s = new bytes(40);
+    for (uint i = 0; i < 20; i++) {
+        bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
+        bytes1 hi = bytes1(uint8(b) / 16);
+        bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+        s[2*i] = char(hi);
+        s[2*i+1] = char(lo);            
+    }
+    return string(s);
+}
+
+function char(bytes1 b) internal pure returns (bytes1 c) {
+    if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+    else return bytes1(uint8(b) + 0x57);
+}
 
     function uintToString(uint256 i) internal pure returns (string) {
         if (i == 0) return "0";
