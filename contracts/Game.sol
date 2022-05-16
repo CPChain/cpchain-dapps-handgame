@@ -276,18 +276,17 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         groupchatInstance.sendMessage(group_id, message);
         // emit TestSendMessage(message);
     }
-
-    // '{"message":{"seq":0yes},"type":"hanggame","version":"2.1"}'
+ 
     function _getMessage(
         uint256 seq,
         string userMessage,
         address sender
     ) private pure returns (string) {
         string memory _id = uintToString(seq);
-        string memory msg0 = '{"message":{"gameId":';
+        string memory msg0 = '{"message":{"seq":';
         string memory msgUser = ',"msg":"';
         string memory msgSender = '","sender":"';
-        string memory msg1 = '"},"type":"hanggame","version":"2.1"}';
+        string memory msg1 = '"},"type":"hang-game","version":"2.1"}';
         string memory message = string(
             abi.encodePacked(
                 msg0,
