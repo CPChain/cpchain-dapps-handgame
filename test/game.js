@@ -102,8 +102,9 @@ contract("Test Game ", (accounts) => {
     })
     it("should get score:" + accounts[1], async () => {
         const instance = await Game.deployed()
-        const b0 = web3.utils.fromWei(await instance.balanceOf(accounts[0]))
-        const b1 = web3.utils.fromWei(await instance.balanceOf(accounts[1]))
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        const b1 = web3.utils.fromWei(await rps.balanceOf(accounts[1]))
         assert.ok(b0 == 2)
         assert.ok(b1 == 1)
     })
@@ -554,29 +555,18 @@ contract("Test Game ", (accounts) => {
 
     it("should get ERC2 current", async () => {
         const instance = await Game.deployed()
-        const b0 = web3.utils.fromWei(await instance.balanceOf(accounts[0]))
-        const b1 = web3.utils.fromWei(await instance.balanceOf(accounts[1]))
-        const b2 = web3.utils.fromWei(await instance.balanceOf(accounts[2]))
-        const b3 = web3.utils.fromWei(await instance.balanceOf(accounts[3]))
-        const b4 = web3.utils.fromWei(await instance.balanceOf(accounts[4]))
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        const b1 = web3.utils.fromWei(await rps.balanceOf(accounts[1]))
+        const b2 = web3.utils.fromWei(await rps.balanceOf(accounts[2]))
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3]))
+        const b4 = web3.utils.fromWei(await rps.balanceOf(accounts[4]))
         assert.ok(b0 == 2)
         assert.ok(b1 == 4)
         assert.ok(b2 == 18)
         assert.ok(b3 == 15)
         assert.ok(b4 == 0)
     })
-
-    // it("should transfer ERC2 current", async () => {
-    //     const instance = await Game.deployed()
-    //     await instance.transfer(accounts[1], web3.utils.toWei(new web3.utils.BN(2)))
-    //     const b0 = web3.utils.fromWei(await instance.balanceOf(accounts[0]))
-    //     const b1 = web3.utils.fromWei(await instance.balanceOf(accounts[1]))
-    //     assert.ok(b0 == 0)
-    //     assert.ok(b1 == 6)
-    // })
-
-
-
-
+ 
 })
 

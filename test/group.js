@@ -106,10 +106,10 @@ contract("Test Game ", (accounts) => {
                 ev[1] == 0
         });
 
-        truffleAssert.eventEmitted(r, 'TestSendMessage', (ev) => {
-            console.log(ev)
-            return true
-        });
+        // truffleAssert.eventEmitted(r, 'TestSendMessage', (ev) => {
+        //     console.log(ev)
+        //     return true
+        // });
 
         
     })

@@ -260,9 +260,9 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         }
     }
 
-    function balanceOf(address account) public view returns (uint256) {
-        return RPSInstance.balanceOfRPS(account);
-    }
+    // function balanceOf(address account) public view returns (uint256) {
+    //     return RPSInstance.balanceOfRPS(account);
+    // }
 
     // event TestSendMessage(string msg);
 
@@ -295,7 +295,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
                 msgUser,
                 userMessage,
                 msgSender,
-                toAsciiString(sender),
+                _toAsciiString(sender),
                 msg1
             )
         );
@@ -356,24 +356,22 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         RPSInstance.mintRPS(account, amount * 1 ether);
     }
 
-  
-
-   function toAsciiString(address x) internal pure returns (string memory) {
-    bytes memory s = new bytes(40);
-    for (uint i = 0; i < 20; i++) {
-        bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
-        bytes1 hi = bytes1(uint8(b) / 16);
-        bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
-        s[2*i] = char(hi);
-        s[2*i+1] = char(lo);            
+    function _toAsciiString(address x) internal pure returns (string memory) {
+        bytes memory s = new bytes(40);
+        for (uint256 i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint256(uint160(x)) / (2**(8 * (19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            s[2 * i] = _char(hi);
+            s[2 * i + 1] = _char(lo);
+        }
+        return string(s);
     }
-    return string(s);
-}
 
-function char(bytes1 b) internal pure returns (bytes1 c) {
-    if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
-    else return bytes1(uint8(b) + 0x57);
-}
+    function _char(bytes1 b) internal pure returns (bytes1 c) {
+        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+        else return bytes1(uint8(b) + 0x57);
+    }
 
     function uintToString(uint256 i) internal pure returns (string) {
         if (i == 0) return "0";
