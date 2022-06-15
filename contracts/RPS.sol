@@ -6,27 +6,21 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/token/ERC20/ERC20.sol";
 
 contract RPS is ERC20, Ownable, IRPS {
     address private _mintAddress;
-
     constructor()
         public
         ERC20("RPS", "Rock paper scissors game score", 18, 0)
     {}
 
-    modifier onlyMintAddress() {
-        require(msg.sender == _mintAddress, "Ownable: caller is not the owner");
+    modifier onlyMinter() {
+        require(msg.sender == _mintAddress, "Ownable: caller is not the minter");
         _;
     }
 
-    function mintRPS(address account, uint256 amount) external onlyMintAddress {
+    function mintRPS(address account, uint256 amount) external onlyMinter {
         _mint(account, amount);
     }
 
-    function balanceOfRPS(address account) public view returns (uint256) {
-        return balanceOf(account);
-    } 
-
-    function setMintContract() external {
-        require(owner == tx.origin, "need origin is owner");
-        _mintAddress = msg.sender;
+    function setMintContract(address contractAddress) external onlyOwner {
+        _mintAddress = contractAddress;
     }
 }

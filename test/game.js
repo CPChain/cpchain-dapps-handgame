@@ -31,16 +31,27 @@ contract("Test Game ", (accounts) => {
         try {
             const rps = await RPS.deployed()
             const instance = await Game.deployed()
+            await instance.setRPS(rps.address)
+            await rps.setMintContract(instance.address)
             const maxLimit = await instance.maxLimit()
             const timeoutLimit = await instance.timeoutLimit()
-
+            assert.equal(timeoutLimit, 24 * 60 * 60)
             assert.equal(web3.utils.fromWei(maxLimit), 1000)
-            assert.equal(timeoutLimit, 10 * 60)
         } catch (error) {
-            console.log(33333333, error)
+            console.log(error)
         }
-
     })
+
+    it("should mint rps failed for " + accounts[1], async () => {
+        try {
+            const rps = await RPS.deployed()
+            await rps.mintRPS(accounts[1], 1, { from: accounts[1] })
+            assert.fail()
+        } catch (error) {
+            assert.ok(error.toString().includes('Ownable: caller is not the minter'))
+        }
+    })
+
     it("contract game number should be 0", async () => {
         const instance = await Game.deployed()
         const totalGameNumber = await instance.totalGameNumber()
@@ -101,7 +112,6 @@ contract("Test Game ", (accounts) => {
 
     })
     it("should get score:" + accounts[1], async () => {
-        const instance = await Game.deployed()
         const rps = await RPS.deployed()
         const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
         const b1 = web3.utils.fromWei(await rps.balanceOf(accounts[1]))
@@ -350,9 +360,6 @@ contract("Test Game ", (accounts) => {
         try {
             const r2 = await instance.openCard(gameId4, proof4, content4, { from: accounts[2] })
             truffleAssert.eventEmitted(r2, 'CardOpened', (ev) => {
-                console.log(ev[1] == accounts[2],
-                    web3.utils.toHex(ev[2]) == proof4,
-                    web3.utils.toNumber(ev[3]) == content4)
                 return ev[0] == gameId4 &&
                     ev[1] == accounts[2] &&
                     web3.utils.toHex(ev[2]) == proof4 &&
@@ -362,16 +369,12 @@ contract("Test Game ", (accounts) => {
             await sleep(1000)
             const r3 = await instance.openCard(gameId4, proof5, content5, { from: accounts[3] })
             truffleAssert.eventEmitted(r3, 'CardOpened', (ev) => {
-                console.log(ev[1] == accounts[3],
-                    web3.utils.toHex(ev[2]) == proof5,
-                    web3.utils.toNumber(ev[3]) == content5)
                 return ev[0] == gameId4 &&
                     ev[1] == accounts[3] &&
                     web3.utils.toHex(ev[2]) == proof5 &&
                     web3.utils.toNumber(ev[3]) == content5
             });
             truffleAssert.eventEmitted(r3, 'GameFinished', (ev) => {
-                console.log(ev[1])
                 return ev[0] == gameId4 && ev[1] == 0
             });
         } catch (error) {
@@ -536,37 +539,19 @@ contract("Test Game ", (accounts) => {
         });
     })
 
-
-    it("should get lastest games failed for limit is too high", async () => {
-        const instance = await Game.deployed()
-        try {
-            await instance.viewLatestGames(100)
-            assert.fail()
-        } catch (error) {
-            assert.ok(error.toString().includes('limit is too high'))
-        }
-    })
-
-    it("should get lastest 2 games", async () => {
-        const instance = await Game.deployed()
-        const games = await instance.viewLatestGames(2)
-        assert.ok(games.length == 2 * 7)
-    })
-
     it("should get ERC2 current", async () => {
-        const instance = await Game.deployed()
         const rps = await RPS.deployed()
         const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
         const b1 = web3.utils.fromWei(await rps.balanceOf(accounts[1]))
         const b2 = web3.utils.fromWei(await rps.balanceOf(accounts[2]))
         const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3]))
         const b4 = web3.utils.fromWei(await rps.balanceOf(accounts[4]))
-        assert.ok(b0 == 2)
+        assert.ok(b0 == 4)
         assert.ok(b1 == 4)
         assert.ok(b2 == 18)
         assert.ok(b3 == 15)
         assert.ok(b4 == 0)
     })
- 
+
 })
 

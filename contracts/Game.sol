@@ -12,19 +12,20 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/security/Verifiable.sol";
 
 contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     uint256 public maxLimit = 1000 ether;
-    uint256 public timeoutLimit = 10 minutes;
-    uint64 public totalGameNumber = 0;
-    uint32 private viewCountLimit = 10;
-
+    uint256 public timeoutLimit = 24 hours;
+    uint64 public totalGameNumber = 0; 
     address public groupChatAddress;
+    address public rpsAddress;
     IGroupChat private groupchatInstance;
-    IRPS private RPSInstance;
-
-    constructor(address rps) public {
-        RPSInstance = IRPS(rps);
-        RPSInstance.setMintContract();
+    IRPS private RPSInstance; 
+    struct MintConfig {
+        uint256 createrMint;
+        uint256 staterLockMint;
+        uint256 playerLockMint;
+        uint256 winnerMint;
+        uint256 loserMint;
+        uint256 drawMint;
     }
-
     struct HandGame {
         uint64 gameId;
         uint256 amount;
@@ -38,6 +39,11 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         uint256 threshold;
     }
 
+    constructor() public {
+        mintConfig = MintConfig(1 ether,1 ether, 1 ether, 3 ether, 0 ether, 1 ether);
+    }
+
+    MintConfig public mintConfig;
     HandGame[] public games;
     mapping(uint64 => uint256) public gameToGroup;
 
@@ -78,11 +84,33 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         _;
     }
 
-    // contract owner methods
+    // contract owner methods 
+    function setMintConfig(
+        uint256 starterMint,
+        uint256 staterLockMint,
+        uint256 playerLockMint,
+        uint256 winnerMint,
+        uint256 loserMint,
+        uint256 drawMint
+    ) public onlyOwner {
+        mintConfig = MintConfig(
+            starterMint,
+            staterLockMint,
+            playerLockMint,
+            winnerMint,
+            loserMint,
+            drawMint
+        );
+    }
 
     function setGroupChat(address groupchat) public onlyOwner {
         groupChatAddress = groupchat;
         groupchatInstance = IGroupChat(groupchat);
+    }
+
+    function setRPS(address rps) public onlyOwner {
+        rpsAddress = rps;
+        RPSInstance = IRPS(rps);
     }
 
     function setMaxLimit(uint256 limit) external onlyOwner {
@@ -135,30 +163,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
             game.timeout,
             cardsInfo
         );
-    }
+    } 
 
-    /**
-     * view the lastest
-     */
-    function viewLatestGames(uint64 limit) external view returns (uint256[]) {
-        require(limit <= viewCountLimit, "limit is too high");
-        uint64 count = limit > totalGameNumber ? totalGameNumber : limit;
-        uint256[] memory _lastestGames = new uint256[](count * 7);
-        for (uint64 i = 0; i < count; i++) {
-            HandGame memory game = games[totalGameNumber - i - 1];
-            _lastestGames[i * 7 + 0] = uint256(game.gameId);
-            _lastestGames[i * 7 + 1] = game.amount;
-            _lastestGames[i * 7 + 2] = game.threshold;
-            _lastestGames[i * 7 + 3] = uint256(game.starter);
-            _lastestGames[i * 7 + 4] = uint256(game.player);
-            _lastestGames[i * 7 + 5] = uint256(game.status);
-            _lastestGames[i * 7 + 6] = game.timeout;
-        }
-
-        return (_lastestGames);
-    }
-
-    // game starter methods
     function startGame(uint256 proof, uint256 threshold)
         external
         payable
@@ -227,10 +233,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         }
         bool validate = validateProof(proof, key, content);
         require(validate, "wrong key or content");
-        // (, uint256 savedContent) = viewContent(game.starterProof);
-        // if (savedContent != 0) {
-        //     setProof(proof, key, content);
-        // }
         setProof(proof, key, content);
         emit CardOpened(gameId, msg.sender, key, content);
 
@@ -260,13 +262,6 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         }
     }
 
-    // function balanceOf(address account) public view returns (uint256) {
-    //     return RPSInstance.balanceOfRPS(account);
-    // }
-
-    // event TestSendMessage(string msg);
-
-    // private methods
     function _notifyGroup(
         uint256 group_id,
         uint64 gameId,
@@ -274,9 +269,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     ) internal onlyActivatedGroupMember(group_id) {
         string memory message = _getMessage(gameId, userMessage, msg.sender);
         groupchatInstance.sendMessage(group_id, message);
-        // emit TestSendMessage(message);
     }
- 
+
     function _getMessage(
         uint256 seq,
         string userMessage,
@@ -310,17 +304,15 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     }
 
     function _lockGame(uint64 gameId, uint256 proof) private {
-        HandGame storage game = games[gameId];
-
-        require(msg.value >= game.threshold, "wrong balance");
-
+        HandGame storage game = games[gameId]; 
+        require(msg.value >= game.threshold, "wrong balance"); 
         game.player = msg.sender;
         game.playerProof = proof;
         game.amount = game.amount + msg.value;
         game.timeout = timeoutLimit + block.timestamp;
         game.status = 1;
-        _mintRPS(game.starter, 2);
-        _mintRPS(game.player, 1);
+        _mintRPS(game.starter, mintConfig.staterLockMint);
+        _mintRPS(game.player, mintConfig.playerLockMint);
         emit GameLocked(gameId, msg.sender, proof, msg.value);
     }
 
@@ -341,6 +333,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         );
         totalGameNumber++;
         games.push(game);
+        _mintRPS(msg.sender, mintConfig.createrMint);
         emit GameStarted(
             game.gameId,
             game.starter,
@@ -352,7 +345,9 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     }
 
     function _mintRPS(address account, uint256 amount) private {
-        RPSInstance.mintRPS(account, amount * 1 ether);
+        if(rpsAddress != address(0)){
+            RPSInstance.mintRPS(account, amount);
+        } 
     }
 
     function _toAsciiString(address x) internal pure returns (string memory) {
@@ -393,15 +388,17 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         HandGame storage game = games[gameId];
         if (r == 1) {
             game.starter.transfer(game.amount);
-            _mintRPS(game.starter, 3);
+            _mintRPS(game.starter, mintConfig.winnerMint);
+            _mintRPS(game.player, mintConfig.loserMint);
         } else if (r == -1) {
             game.player.transfer(game.amount);
-            _mintRPS(game.player, 3);
+            _mintRPS(game.player, mintConfig.winnerMint);
+            _mintRPS(game.starter, mintConfig.loserMint);
         } else {
             game.starter.transfer(game.amount / 2);
             game.player.transfer(game.amount / 2);
-            _mintRPS(game.starter, 1);
-            _mintRPS(game.player, 1);
+            _mintRPS(game.player, mintConfig.drawMint);
+            _mintRPS(game.starter, mintConfig.drawMint);
         }
         game.status = 2;
         emit GameFinished(gameId, r);

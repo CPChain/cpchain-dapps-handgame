@@ -100,18 +100,11 @@ contract("Test Game ", (accounts) => {
 
         const instance = await Game.deployed()
         const r = await instance.startGroupChatGame(card, web3.utils.toWei(new web3.utils.BN(5)), 1, 'yes', { value: web3.utils.toWei(new web3.utils.BN(5)) })
- 
+
         truffleAssert.eventEmitted(r, 'CreateGroupHandGame', (ev) => {
             return ev[0] == 1 &&
                 ev[1] == 0
         });
-
-        // truffleAssert.eventEmitted(r, 'TestSendMessage', (ev) => {
-        //     console.log(ev)
-        //     return true
-        // });
-
-        
     })
 
     it("should join game failed for" + accounts[1], async () => {
@@ -123,12 +116,27 @@ contract("Test Game ", (accounts) => {
         }
 
     })
-    it("should join game success for" + accounts[1], async () => {
-
+    it("should join game success for" + accounts[1], async () => { 
         const instance = await Game.deployed()
         const r = await instance.joinGame(0, card2, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(5)) })
         truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
-            return ev[0] == 0 
+            return ev[0] == 0
+        });
+    })
+
+    it("should start group 1 game success for" + accounts[0], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.startGroupChatGame(card, web3.utils.toWei(new web3.utils.BN(5)), 1, 'yes', { value: web3.utils.toWei(new web3.utils.BN(5)) })
+        truffleAssert.eventEmitted(r, 'CreateGroupHandGame', (ev) => {
+            return ev[0] == 1 &&
+                ev[1] == 1
+        });
+    })
+    it("should join game success for" + accounts[1], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.joinGame(1, card2, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(5)) })
+        truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
+            return ev[0] == 1
         });
     })
 
