@@ -26,6 +26,8 @@ const [card6, proof6, content6] = cardGenerate('proof6', 1)
 const [card7, proof7, content7] = cardGenerate('proof7', 2)
 const [card8, proof8, content8] = cardGenerate('proof8', 2)
 const [card9, proof9, content9] = cardGenerate('proof9', 3)
+const [card10, proof10, content10] = cardGenerate('proof10', 3)
+const [card11, proof11, content11] = cardGenerate('proof11', 3)
 contract("Test Game ", (accounts) => {
     it("should get contract params success for " + accounts[0], async () => {
         try {
@@ -552,6 +554,113 @@ contract("Test Game ", (accounts) => {
         assert.ok(b3 == 15)
         assert.ok(b4 == 0)
     })
+
+    const [creater, starter, player, win, lose, draw] = [10, 9, 8, 30, 5, 12]
+
+    it("should change mint config success", async () => {
+        const instance = await Game.deployed()
+        const result1 = await instance.setMintConfig(
+            web3.utils.toWei(new web3.utils.BN(creater)),  // cteater
+            web3.utils.toWei(new web3.utils.BN(starter)),  // locked starter
+            web3.utils.toWei(new web3.utils.BN(player)),  // locked player
+            web3.utils.toWei(new web3.utils.BN(win)), // win
+            web3.utils.toWei(new web3.utils.BN(lose)),  //lose
+            web3.utils.toWei(new web3.utils.BN(draw))   //draw
+        )
+        truffleAssert.eventEmitted(result1, 'SetMintConfig', (ev) => {
+            return web3.utils.fromWei(ev.starterMint) == creater &&
+                web3.utils.fromWei(ev.staterLockMint) == starter &&
+                web3.utils.fromWei(ev.playerLockMint) == player &&
+                web3.utils.fromWei(ev.winnerMint) == win &&
+                web3.utils.fromWei(ev.loserMint) == lose &&
+                web3.utils.fromWei(ev.drawMint) == draw
+        });
+    })
+
+    const gameId9 = 9
+    it("should start game  9 for " + accounts[0], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.startGame(card9, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
+        truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
+            return ev[0] == gameId9 &&
+                ev[1] == accounts[0] &&
+                web3.utils.toHex(ev[2]) == card9 &&
+                web3.utils.fromWei(ev[3]) == 50 &&
+                web3.utils.fromWei(ev[4]) == 5
+        });
+    })
+    it(`should add ${creater} rps for ` + accounts[0], async () => {
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        assert.ok(b0 == 4 + creater)
+    })
+
+
+    it("should join game 9 success for " + accounts[3], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.joinGame(gameId9, card7, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(8)) })
+        truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
+            return ev[0] == gameId9
+        });
+    })
+
+    it(`should add ${starter, player} rps for  game 9`, async () => {
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3]))
+        assert.ok(b0 == 4 + creater + starter)
+        assert.ok(b3 == 15 + player)
+    })
+
+    it("should open card  ", async () => {
+        const instance = await Game.deployed()
+        await instance.openCard(gameId9, proof7, content7, { from: accounts[3] })
+        await instance.openCard(gameId9, proof9, content9)
+    })
+
+
+    it(`should add ${win, lose} rps for  game 9`, async () => {
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3])) 
+        assert.ok(b0 == 4 + creater + starter + win)
+        assert.ok(b3 == 15 + player + lose)
+    })
+    const gameId10 = 10
+    it("should start game  10 for " + accounts[0], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.startGame(card10, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
+        truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
+            return ev[0] == gameId10 &&
+                ev[1] == accounts[0] &&
+                web3.utils.toHex(ev[2]) == card10 &&
+                web3.utils.fromWei(ev[3]) == 50 &&
+                web3.utils.fromWei(ev[4]) == 5
+        });
+    })
+
+    it("should join game 10 success for " + accounts[3], async () => {
+        const instance = await Game.deployed()
+        const r = await instance.joinGame(gameId10, card11, { from: accounts[3], value: web3.utils.toWei(new web3.utils.BN(8)) })
+        truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {
+            return ev[0] == gameId10
+        });
+    })
+
+    it("should open card  ", async () => {
+        const instance = await Game.deployed()
+        await instance.openCard(gameId10, proof11, content11, { from: accounts[3] })
+        await instance.openCard(gameId10, proof10, content10)
+    })
+
+    it(`should add ${win, lose} rps for  game 10`, async () => {
+        const rps = await RPS.deployed()
+        const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3])) 
+        assert.ok(b0 == 4 + creater + starter + win + creater + starter + draw)
+        assert.ok(b3 == 15 + player + lose + player + draw)
+    })
+
 
 })
 

@@ -4,6 +4,14 @@ pragma solidity >=0.4.22 <0.9.0;
 interface IGame {
     event SetMaxLimit(uint256 limit);
     event SetTimeoutLimit(uint256 limit);
+    event SetMintConfig(
+        uint256 starterMint,
+        uint256 staterLockMint,
+        uint256 playerLockMint,
+        uint256 winnerMint,
+        uint256 loserMint,
+        uint256 drawMint
+    );
     /**
      * Game started by starter,
      */
@@ -49,4 +57,13 @@ interface IGame {
     function setMaxLimit(uint256 limit) external;
 
     function setTimeoutLimit(uint256 limit) external;
+
+    function setMintConfig(
+        uint256 starterMint,
+        uint256 staterLockMint,
+        uint256 playerLockMint,
+        uint256 winnerMint,
+        uint256 loserMint,
+        uint256 drawMint
+    ) external;
 }

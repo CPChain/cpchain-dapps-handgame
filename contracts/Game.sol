@@ -101,6 +101,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
             loserMint,
             drawMint
         );
+        emit SetMintConfig(starterMint,staterLockMint,playerLockMint,winnerMint,loserMint,drawMint);
     }
 
     function setGroupChat(address groupchat) public onlyOwner {
