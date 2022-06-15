@@ -13,11 +13,11 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/security/Verifiable.sol";
 contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     uint256 public maxLimit = 1000 ether;
     uint256 public timeoutLimit = 24 hours;
-    uint64 public totalGameNumber = 0; 
+    uint64 public totalGameNumber = 0;
     address public groupChatAddress;
     address public rpsAddress;
     IGroupChat private groupchatInstance;
-    IRPS private RPSInstance; 
+    IRPS private RPSInstance;
     struct MintConfig {
         uint256 createrMint;
         uint256 staterLockMint;
@@ -39,8 +39,10 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         uint256 threshold;
     }
 
-    constructor() public {
+    constructor(address rps) public {
         mintConfig = MintConfig(1 ether,1 ether, 1 ether, 3 ether, 0 ether, 1 ether);
+        rpsAddress = rps;
+        RPSInstance = IRPS(rps);
     }
 
     MintConfig public mintConfig;
@@ -84,7 +86,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         _;
     }
 
-    // contract owner methods 
+    // contract owner methods
     function setMintConfig(
         uint256 starterMint,
         uint256 staterLockMint,
@@ -164,7 +166,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
             game.timeout,
             cardsInfo
         );
-    } 
+    }
 
     function startGame(uint256 proof, uint256 threshold)
         external
@@ -305,8 +307,8 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     }
 
     function _lockGame(uint64 gameId, uint256 proof) private {
-        HandGame storage game = games[gameId]; 
-        require(msg.value >= game.threshold, "wrong balance"); 
+        HandGame storage game = games[gameId];
+        require(msg.value >= game.threshold, "wrong balance");
         game.player = msg.sender;
         game.playerProof = proof;
         game.amount = game.amount + msg.value;
@@ -348,7 +350,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
     function _mintRPS(address account, uint256 amount) private {
         if(rpsAddress != address(0)){
             RPSInstance.mintRPS(account, amount);
-        } 
+        }
     }
 
     function _toAsciiString(address x) internal pure returns (string memory) {

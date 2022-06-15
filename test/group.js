@@ -26,17 +26,16 @@ const [card6, proof6, content6] = cardGenerate('proof6', 1)
 contract("Test Game ", (accounts) => {
     it("should set chat address for owner ", async () => {
         try {
-            const group = await GroupChatMock.deployed()
-            console.log(group.address)
             const rps = await RPS.deployed()
+            const group = await GroupChatMock.deployed()
             const instance = await Game.deployed()
-
             await instance.setGroupChat(group.address)
+            await rps.setMintContract(instance.address)
             const chatAddress = await instance.groupChatAddress()
             assert.ok(chatAddress == group.address)
 
         } catch (error) {
-            console.log(33333333, error)
+            console.log(error)
         }
 
     })
@@ -116,7 +115,7 @@ contract("Test Game ", (accounts) => {
         }
 
     })
-    it("should join game success for" + accounts[1], async () => { 
+    it("should join game success for" + accounts[1], async () => {
         const instance = await Game.deployed()
         const r = await instance.joinGame(0, card2, { from: accounts[2], value: web3.utils.toWei(new web3.utils.BN(5)) })
         truffleAssert.eventEmitted(r, 'GameLocked', (ev) => {

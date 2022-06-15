@@ -29,6 +29,43 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "name": "starterMint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "staterLockMint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "playerLockMint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "winnerMint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "loserMint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "drawMint",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetMintConfig",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "name": "gameId",
           "type": "uint64"
@@ -204,6 +241,40 @@
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "starterMint",
+          "type": "uint256"
+        },
+        {
+          "name": "staterLockMint",
+          "type": "uint256"
+        },
+        {
+          "name": "playerLockMint",
+          "type": "uint256"
+        },
+        {
+          "name": "winnerMint",
+          "type": "uint256"
+        },
+        {
+          "name": "loserMint",
+          "type": "uint256"
+        },
+        {
+          "name": "drawMint",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMintConfig",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
   "metadata": "",
@@ -211,20 +282,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IGame {\n    event SetMaxLimit(uint256 limit);\n    event SetTimeoutLimit(uint256 limit);\n    /**\n     * Game started by starter,\n     */\n    event GameStarted(\n        uint64 indexed gameId,\n        address starter,\n        uint256 card,\n        uint256 amount,\n        uint256 threshold\n    );\n\n    event CreateGroupHandGame(\n        uint256 indexed group_id,\n        uint64 indexed gameId,\n        address starter,\n        string message,\n        uint256 amount,\n        uint256 threshold\n    );\n    /**\n     * No other player join the game, starter cancel the game\n     */\n    event GameCancelled(uint64 indexed gameId);\n    /**\n     * Player joined, the game will be locked\n     */\n    event GameLocked(\n        uint64 indexed gameId,\n        address player,\n        uint256 card,\n        uint256 amount\n    );\n\n    event CardOpened(\n        uint64 indexed gameId,\n        address player,\n        uint256 key,\n        uint256 content\n    );\n\n    event GameFinished(uint64 indexed gameId, int8 result);\n\n    function setMaxLimit(uint256 limit) external;\n\n    function setTimeoutLimit(uint256 limit) external;\n}\n",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ninterface IGame {\n    event SetMaxLimit(uint256 limit);\n    event SetTimeoutLimit(uint256 limit);\n    event SetMintConfig(\n        uint256 starterMint,\n        uint256 staterLockMint,\n        uint256 playerLockMint,\n        uint256 winnerMint,\n        uint256 loserMint,\n        uint256 drawMint\n    );\n    /**\n     * Game started by starter,\n     */\n    event GameStarted(\n        uint64 indexed gameId,\n        address starter,\n        uint256 card,\n        uint256 amount,\n        uint256 threshold\n    );\n\n    event CreateGroupHandGame(\n        uint256 indexed group_id,\n        uint64 indexed gameId,\n        address starter,\n        string message,\n        uint256 amount,\n        uint256 threshold\n    );\n    /**\n     * No other player join the game, starter cancel the game\n     */\n    event GameCancelled(uint64 indexed gameId);\n    /**\n     * Player joined, the game will be locked\n     */\n    event GameLocked(\n        uint64 indexed gameId,\n        address player,\n        uint256 card,\n        uint256 amount\n    );\n\n    event CardOpened(\n        uint64 indexed gameId,\n        address player,\n        uint256 key,\n        uint256 content\n    );\n\n    event GameFinished(uint64 indexed gameId, int8 result);\n\n    function setMaxLimit(uint256 limit) external;\n\n    function setTimeoutLimit(uint256 limit) external;\n\n    function setMintConfig(\n        uint256 starterMint,\n        uint256 staterLockMint,\n        uint256 playerLockMint,\n        uint256 winnerMint,\n        uint256 loserMint,\n        uint256 drawMint\n    ) external;\n}\n",
   "sourcePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGame.sol",
   "ast": {
-    "absolutePath": "project:/contracts/interfaces/IGame.sol",
+    "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGame.sol",
     "exportedSymbols": {
       "IGame": [
-        2541
+        1568
       ]
     },
-    "id": 2542,
+    "id": 1569,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2466,
+        "id": 1464,
         "literals": [
           "solidity",
           ">=",
@@ -235,7 +306,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:10"
+        "src": "32:32:2"
       },
       {
         "baseContracts": [],
@@ -243,9 +314,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2541,
+        "id": 1568,
         "linearizedBaseContracts": [
-          2541
+          1568
         ],
         "name": "IGame",
         "nodeType": "ContractDefinition",
@@ -253,21 +324,21 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2470,
+            "id": 1468,
             "name": "SetMaxLimit",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2469,
+              "id": 1467,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2468,
+                  "id": 1466,
                   "indexed": false,
                   "name": "limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2470,
-                  "src": "106:13:10",
+                  "scope": 1468,
+                  "src": "106:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -275,10 +346,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2467,
+                    "id": 1465,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "106:7:10",
+                    "src": "106:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -288,28 +359,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "105:15:10"
+              "src": "105:15:2"
             },
-            "src": "88:33:10"
+            "src": "88:33:2"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2474,
+            "id": 1472,
             "name": "SetTimeoutLimit",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2473,
+              "id": 1471,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2472,
+                  "id": 1470,
                   "indexed": false,
                   "name": "limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2474,
-                  "src": "148:13:10",
+                  "scope": 1472,
+                  "src": "148:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -317,10 +388,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2471,
+                    "id": 1469,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "148:7:10",
+                    "src": "148:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -330,28 +401,205 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "147:15:10"
+              "src": "147:15:2"
             },
-            "src": "126:37:10"
+            "src": "126:37:2"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 1486,
+            "name": "SetMintConfig",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 1485,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1474,
+                  "indexed": false,
+                  "name": "starterMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "197:19:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1473,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "197:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1476,
+                  "indexed": false,
+                  "name": "staterLockMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "226:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1475,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "226:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1478,
+                  "indexed": false,
+                  "name": "playerLockMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "258:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1477,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "258:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1480,
+                  "indexed": false,
+                  "name": "winnerMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "290:18:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1479,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "290:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1482,
+                  "indexed": false,
+                  "name": "loserMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "318:17:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1481,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "318:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1484,
+                  "indexed": false,
+                  "name": "drawMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1486,
+                  "src": "345:16:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1483,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "345:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "187:180:2"
+            },
+            "src": "168:200:2"
           },
           {
             "anonymous": false,
             "documentation": "Game started by starter,",
-            "id": 2486,
+            "id": 1498,
             "name": "GameStarted",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2485,
+              "id": 1497,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2476,
+                  "id": 1488,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2486,
-                  "src": "243:21:10",
+                  "scope": 1498,
+                  "src": "448:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -359,10 +607,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2475,
+                    "id": 1487,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "243:6:10",
+                    "src": "448:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -373,12 +621,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2478,
+                  "id": 1490,
                   "indexed": false,
                   "name": "starter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2486,
-                  "src": "274:15:10",
+                  "scope": 1498,
+                  "src": "479:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -386,10 +634,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2477,
+                    "id": 1489,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "274:7:10",
+                    "src": "479:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -400,12 +648,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2480,
+                  "id": 1492,
                   "indexed": false,
                   "name": "card",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2486,
-                  "src": "299:12:10",
+                  "scope": 1498,
+                  "src": "504:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -413,10 +661,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2479,
+                    "id": 1491,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "299:7:10",
+                    "src": "504:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -427,12 +675,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2482,
+                  "id": 1494,
                   "indexed": false,
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2486,
-                  "src": "321:14:10",
+                  "scope": 1498,
+                  "src": "526:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -440,10 +688,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2481,
+                    "id": 1493,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "321:7:10",
+                    "src": "526:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -454,12 +702,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2484,
+                  "id": 1496,
                   "indexed": false,
                   "name": "threshold",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2486,
-                  "src": "345:17:10",
+                  "scope": 1498,
+                  "src": "550:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -467,10 +715,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2483,
+                    "id": 1495,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "345:7:10",
+                    "src": "550:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -480,28 +728,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "233:135:10"
+              "src": "438:135:2"
             },
-            "src": "216:153:10"
+            "src": "421:153:2"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2500,
+            "id": 1512,
             "name": "CreateGroupHandGame",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2499,
+              "id": 1511,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2488,
+                  "id": 1500,
                   "indexed": true,
                   "name": "group_id",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "410:24:10",
+                  "scope": 1512,
+                  "src": "615:24:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -509,10 +757,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2487,
+                    "id": 1499,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "410:7:10",
+                    "src": "615:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -523,12 +771,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2490,
+                  "id": 1502,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "444:21:10",
+                  "scope": 1512,
+                  "src": "649:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -536,10 +784,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2489,
+                    "id": 1501,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "444:6:10",
+                    "src": "649:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -550,12 +798,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2492,
+                  "id": 1504,
                   "indexed": false,
                   "name": "starter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "475:15:10",
+                  "scope": 1512,
+                  "src": "680:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -563,10 +811,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2491,
+                    "id": 1503,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "475:7:10",
+                    "src": "680:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -577,12 +825,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2494,
+                  "id": 1506,
                   "indexed": false,
                   "name": "message",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "500:14:10",
+                  "scope": 1512,
+                  "src": "705:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -590,10 +838,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2493,
+                    "id": 1505,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "500:6:10",
+                    "src": "705:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -604,12 +852,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2496,
+                  "id": 1508,
                   "indexed": false,
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "524:14:10",
+                  "scope": 1512,
+                  "src": "729:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -617,10 +865,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2495,
+                    "id": 1507,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "524:7:10",
+                    "src": "729:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -631,12 +879,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2498,
+                  "id": 1510,
                   "indexed": false,
                   "name": "threshold",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2500,
-                  "src": "548:17:10",
+                  "scope": 1512,
+                  "src": "753:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -644,10 +892,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2497,
+                    "id": 1509,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "548:7:10",
+                    "src": "753:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -657,28 +905,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "400:171:10"
+              "src": "605:171:2"
             },
-            "src": "375:197:10"
+            "src": "580:197:2"
           },
           {
             "anonymous": false,
             "documentation": "No other player join the game, starter cancel the game",
-            "id": 2504,
+            "id": 1516,
             "name": "GameCancelled",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2503,
+              "id": 1515,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2502,
+                  "id": 1514,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2504,
-                  "src": "675:21:10",
+                  "scope": 1516,
+                  "src": "880:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -686,10 +934,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2501,
+                    "id": 1513,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "675:6:10",
+                    "src": "880:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -699,28 +947,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "674:23:10"
+              "src": "879:23:2"
             },
-            "src": "655:43:10"
+            "src": "860:43:2"
           },
           {
             "anonymous": false,
             "documentation": "Player joined, the game will be locked",
-            "id": 2514,
+            "id": 1526,
             "name": "GameLocked",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2513,
+              "id": 1525,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2506,
+                  "id": 1518,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2514,
-                  "src": "791:21:10",
+                  "scope": 1526,
+                  "src": "996:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -728,10 +976,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2505,
+                    "id": 1517,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "791:6:10",
+                    "src": "996:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -742,12 +990,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2508,
+                  "id": 1520,
                   "indexed": false,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2514,
-                  "src": "822:14:10",
+                  "scope": 1526,
+                  "src": "1027:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -755,10 +1003,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2507,
+                    "id": 1519,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "822:7:10",
+                    "src": "1027:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -769,12 +1017,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2510,
+                  "id": 1522,
                   "indexed": false,
                   "name": "card",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2514,
-                  "src": "846:12:10",
+                  "scope": 1526,
+                  "src": "1051:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -782,10 +1030,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2509,
+                    "id": 1521,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "846:7:10",
+                    "src": "1051:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -796,12 +1044,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2512,
+                  "id": 1524,
                   "indexed": false,
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2514,
-                  "src": "868:14:10",
+                  "scope": 1526,
+                  "src": "1073:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -809,10 +1057,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2511,
+                    "id": 1523,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "868:7:10",
+                    "src": "1073:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -822,28 +1070,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "781:107:10"
+              "src": "986:107:2"
             },
-            "src": "765:124:10"
+            "src": "970:124:2"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2524,
+            "id": 1536,
             "name": "CardOpened",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2523,
+              "id": 1535,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2516,
+                  "id": 1528,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2524,
-                  "src": "921:21:10",
+                  "scope": 1536,
+                  "src": "1126:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -851,10 +1099,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2515,
+                    "id": 1527,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "921:6:10",
+                    "src": "1126:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -865,12 +1113,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2518,
+                  "id": 1530,
                   "indexed": false,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2524,
-                  "src": "952:14:10",
+                  "scope": 1536,
+                  "src": "1157:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -878,10 +1126,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2517,
+                    "id": 1529,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "952:7:10",
+                    "src": "1157:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -892,12 +1140,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2520,
+                  "id": 1532,
                   "indexed": false,
                   "name": "key",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2524,
-                  "src": "976:11:10",
+                  "scope": 1536,
+                  "src": "1181:11:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -905,10 +1153,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2519,
+                    "id": 1531,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "976:7:10",
+                    "src": "1181:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -919,12 +1167,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2522,
+                  "id": 1534,
                   "indexed": false,
                   "name": "content",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2524,
-                  "src": "997:15:10",
+                  "scope": 1536,
+                  "src": "1202:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -932,10 +1180,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2521,
+                    "id": 1533,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "997:7:10",
+                    "src": "1202:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -945,28 +1193,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "911:107:10"
+              "src": "1116:107:2"
             },
-            "src": "895:124:10"
+            "src": "1100:124:2"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2530,
+            "id": 1542,
             "name": "GameFinished",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2529,
+              "id": 1541,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2526,
+                  "id": 1538,
                   "indexed": true,
                   "name": "gameId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2530,
-                  "src": "1044:21:10",
+                  "scope": 1542,
+                  "src": "1249:21:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -974,10 +1222,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 2525,
+                    "id": 1537,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1044:6:10",
+                    "src": "1249:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -988,12 +1236,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 2528,
+                  "id": 1540,
                   "indexed": false,
                   "name": "result",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2530,
-                  "src": "1067:11:10",
+                  "scope": 1542,
+                  "src": "1272:11:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1001,10 +1249,10 @@
                     "typeString": "int8"
                   },
                   "typeName": {
-                    "id": 2527,
+                    "id": 1539,
                     "name": "int8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1067:4:10",
+                    "src": "1272:4:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_int8",
                       "typeString": "int8"
@@ -1014,14 +1262,14 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1043:36:10"
+              "src": "1248:36:2"
             },
-            "src": "1025:55:10"
+            "src": "1230:55:2"
           },
           {
             "body": null,
             "documentation": null,
-            "id": 2535,
+            "id": 1547,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1029,16 +1277,16 @@
             "name": "setMaxLimit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2533,
+              "id": 1545,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2532,
+                  "id": 1544,
                   "name": "limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2535,
-                  "src": "1107:13:10",
+                  "scope": 1547,
+                  "src": "1312:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1046,10 +1294,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2531,
+                    "id": 1543,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1107:7:10",
+                    "src": "1312:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1059,17 +1307,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1106:15:10"
+              "src": "1311:15:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2534,
+              "id": 1546,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1130:0:10"
+              "src": "1335:0:2"
             },
-            "scope": 2541,
-            "src": "1086:45:10",
+            "scope": 1568,
+            "src": "1291:45:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -1077,7 +1325,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2540,
+            "id": 1552,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1085,16 +1333,16 @@
             "name": "setTimeoutLimit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2538,
+              "id": 1550,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2537,
+                  "id": 1549,
                   "name": "limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2540,
-                  "src": "1162:13:10",
+                  "scope": 1552,
+                  "src": "1367:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1102,10 +1350,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2536,
+                    "id": 1548,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1162:7:10",
+                    "src": "1367:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1115,34 +1363,220 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1161:15:10"
+              "src": "1366:15:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2539,
+              "id": 1551,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1185:0:10"
+              "src": "1390:0:2"
             },
-            "scope": 2541,
-            "src": "1137:49:10",
+            "scope": 1568,
+            "src": "1342:49:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 1567,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "setMintConfig",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1565,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1554,
+                  "name": "starterMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1429:19:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1553,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1429:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1556,
+                  "name": "staterLockMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1458:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1555,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1458:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1558,
+                  "name": "playerLockMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1490:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1557,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1490:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1560,
+                  "name": "winnerMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1522:18:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1559,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1522:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1562,
+                  "name": "loserMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1550:17:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1561,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1550:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1564,
+                  "name": "drawMint",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1567,
+                  "src": "1577:16:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1563,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1577:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1419:180:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1566,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1608:0:2"
+            },
+            "scope": 1568,
+            "src": "1397:212:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2542,
-        "src": "66:1122:10"
+        "scope": 1569,
+        "src": "66:1545:2"
       }
     ],
-    "src": "32:1157:10"
+    "src": "32:1580:2"
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "project:/contracts/interfaces/IGame.sol",
+      "absolutePath": "/home/zhangk/Documents/github/cpchain-dapps-handgame/contracts/interfaces/IGame.sol",
       "exportedSymbols": {
         "IGame": [
-          2541
+          1568
         ]
       }
     },
@@ -1159,9 +1593,9 @@
             ".0"
           ]
         },
-        "id": 2466,
+        "id": 1464,
         "name": "PragmaDirective",
-        "src": "32:32:10"
+        "src": "32:32:2"
       },
       {
         "attributes": {
@@ -1175,10 +1609,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            2541
+            1568
           ],
           "name": "IGame",
-          "scope": 2542
+          "scope": 1569
         },
         "children": [
           {
@@ -1195,7 +1629,7 @@
                       "constant": false,
                       "indexed": false,
                       "name": "limit",
-                      "scope": 2470,
+                      "scope": 1468,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1208,24 +1642,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2467,
+                        "id": 1465,
                         "name": "ElementaryTypeName",
-                        "src": "106:7:10"
+                        "src": "106:7:2"
                       }
                     ],
-                    "id": 2468,
+                    "id": 1466,
                     "name": "VariableDeclaration",
-                    "src": "106:13:10"
+                    "src": "106:13:2"
                   }
                 ],
-                "id": 2469,
+                "id": 1467,
                 "name": "ParameterList",
-                "src": "105:15:10"
+                "src": "105:15:2"
               }
             ],
-            "id": 2470,
+            "id": 1468,
             "name": "EventDefinition",
-            "src": "88:33:10"
+            "src": "88:33:2"
           },
           {
             "attributes": {
@@ -1241,7 +1675,7 @@
                       "constant": false,
                       "indexed": false,
                       "name": "limit",
-                      "scope": 2474,
+                      "scope": 1472,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1254,24 +1688,205 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2471,
+                        "id": 1469,
                         "name": "ElementaryTypeName",
-                        "src": "148:7:10"
+                        "src": "148:7:2"
                       }
                     ],
-                    "id": 2472,
+                    "id": 1470,
                     "name": "VariableDeclaration",
-                    "src": "148:13:10"
+                    "src": "148:13:2"
                   }
                 ],
-                "id": 2473,
+                "id": 1471,
                 "name": "ParameterList",
-                "src": "147:15:10"
+                "src": "147:15:2"
               }
             ],
-            "id": 2474,
+            "id": 1472,
             "name": "EventDefinition",
-            "src": "126:37:10"
+            "src": "126:37:2"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "SetMintConfig"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "starterMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1473,
+                        "name": "ElementaryTypeName",
+                        "src": "197:7:2"
+                      }
+                    ],
+                    "id": 1474,
+                    "name": "VariableDeclaration",
+                    "src": "197:19:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "staterLockMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1475,
+                        "name": "ElementaryTypeName",
+                        "src": "226:7:2"
+                      }
+                    ],
+                    "id": 1476,
+                    "name": "VariableDeclaration",
+                    "src": "226:22:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "playerLockMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1477,
+                        "name": "ElementaryTypeName",
+                        "src": "258:7:2"
+                      }
+                    ],
+                    "id": 1478,
+                    "name": "VariableDeclaration",
+                    "src": "258:22:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "winnerMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1479,
+                        "name": "ElementaryTypeName",
+                        "src": "290:7:2"
+                      }
+                    ],
+                    "id": 1480,
+                    "name": "VariableDeclaration",
+                    "src": "290:18:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "loserMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1481,
+                        "name": "ElementaryTypeName",
+                        "src": "318:7:2"
+                      }
+                    ],
+                    "id": 1482,
+                    "name": "VariableDeclaration",
+                    "src": "318:17:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "drawMint",
+                      "scope": 1486,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1483,
+                        "name": "ElementaryTypeName",
+                        "src": "345:7:2"
+                      }
+                    ],
+                    "id": 1484,
+                    "name": "VariableDeclaration",
+                    "src": "345:16:2"
+                  }
+                ],
+                "id": 1485,
+                "name": "ParameterList",
+                "src": "187:180:2"
+              }
+            ],
+            "id": 1486,
+            "name": "EventDefinition",
+            "src": "168:200:2"
           },
           {
             "attributes": {
@@ -1287,7 +1902,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2486,
+                      "scope": 1498,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1300,21 +1915,21 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2475,
+                        "id": 1487,
                         "name": "ElementaryTypeName",
-                        "src": "243:6:10"
+                        "src": "448:6:2"
                       }
                     ],
-                    "id": 2476,
+                    "id": 1488,
                     "name": "VariableDeclaration",
-                    "src": "243:21:10"
+                    "src": "448:21:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "starter",
-                      "scope": 2486,
+                      "scope": 1498,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1327,21 +1942,21 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2477,
+                        "id": 1489,
                         "name": "ElementaryTypeName",
-                        "src": "274:7:10"
+                        "src": "479:7:2"
                       }
                     ],
-                    "id": 2478,
+                    "id": 1490,
                     "name": "VariableDeclaration",
-                    "src": "274:15:10"
+                    "src": "479:15:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "card",
-                      "scope": 2486,
+                      "scope": 1498,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1354,21 +1969,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2479,
+                        "id": 1491,
                         "name": "ElementaryTypeName",
-                        "src": "299:7:10"
+                        "src": "504:7:2"
                       }
                     ],
-                    "id": 2480,
+                    "id": 1492,
                     "name": "VariableDeclaration",
-                    "src": "299:12:10"
+                    "src": "504:12:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "amount",
-                      "scope": 2486,
+                      "scope": 1498,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1381,21 +1996,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2481,
+                        "id": 1493,
                         "name": "ElementaryTypeName",
-                        "src": "321:7:10"
+                        "src": "526:7:2"
                       }
                     ],
-                    "id": 2482,
+                    "id": 1494,
                     "name": "VariableDeclaration",
-                    "src": "321:14:10"
+                    "src": "526:14:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "threshold",
-                      "scope": 2486,
+                      "scope": 1498,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1408,24 +2023,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2483,
+                        "id": 1495,
                         "name": "ElementaryTypeName",
-                        "src": "345:7:10"
+                        "src": "550:7:2"
                       }
                     ],
-                    "id": 2484,
+                    "id": 1496,
                     "name": "VariableDeclaration",
-                    "src": "345:17:10"
+                    "src": "550:17:2"
                   }
                 ],
-                "id": 2485,
+                "id": 1497,
                 "name": "ParameterList",
-                "src": "233:135:10"
+                "src": "438:135:2"
               }
             ],
-            "id": 2486,
+            "id": 1498,
             "name": "EventDefinition",
-            "src": "216:153:10"
+            "src": "421:153:2"
           },
           {
             "attributes": {
@@ -1441,7 +2056,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "group_id",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1454,21 +2069,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2487,
+                        "id": 1499,
                         "name": "ElementaryTypeName",
-                        "src": "410:7:10"
+                        "src": "615:7:2"
                       }
                     ],
-                    "id": 2488,
+                    "id": 1500,
                     "name": "VariableDeclaration",
-                    "src": "410:24:10"
+                    "src": "615:24:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1481,21 +2096,21 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2489,
+                        "id": 1501,
                         "name": "ElementaryTypeName",
-                        "src": "444:6:10"
+                        "src": "649:6:2"
                       }
                     ],
-                    "id": 2490,
+                    "id": 1502,
                     "name": "VariableDeclaration",
-                    "src": "444:21:10"
+                    "src": "649:21:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "starter",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1508,21 +2123,21 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2491,
+                        "id": 1503,
                         "name": "ElementaryTypeName",
-                        "src": "475:7:10"
+                        "src": "680:7:2"
                       }
                     ],
-                    "id": 2492,
+                    "id": 1504,
                     "name": "VariableDeclaration",
-                    "src": "475:15:10"
+                    "src": "680:15:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "message",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "string",
@@ -1535,21 +2150,21 @@
                           "name": "string",
                           "type": "string"
                         },
-                        "id": 2493,
+                        "id": 1505,
                         "name": "ElementaryTypeName",
-                        "src": "500:6:10"
+                        "src": "705:6:2"
                       }
                     ],
-                    "id": 2494,
+                    "id": 1506,
                     "name": "VariableDeclaration",
-                    "src": "500:14:10"
+                    "src": "705:14:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "amount",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1562,21 +2177,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2495,
+                        "id": 1507,
                         "name": "ElementaryTypeName",
-                        "src": "524:7:10"
+                        "src": "729:7:2"
                       }
                     ],
-                    "id": 2496,
+                    "id": 1508,
                     "name": "VariableDeclaration",
-                    "src": "524:14:10"
+                    "src": "729:14:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "threshold",
-                      "scope": 2500,
+                      "scope": 1512,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1589,24 +2204,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2497,
+                        "id": 1509,
                         "name": "ElementaryTypeName",
-                        "src": "548:7:10"
+                        "src": "753:7:2"
                       }
                     ],
-                    "id": 2498,
+                    "id": 1510,
                     "name": "VariableDeclaration",
-                    "src": "548:17:10"
+                    "src": "753:17:2"
                   }
                 ],
-                "id": 2499,
+                "id": 1511,
                 "name": "ParameterList",
-                "src": "400:171:10"
+                "src": "605:171:2"
               }
             ],
-            "id": 2500,
+            "id": 1512,
             "name": "EventDefinition",
-            "src": "375:197:10"
+            "src": "580:197:2"
           },
           {
             "attributes": {
@@ -1622,7 +2237,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2504,
+                      "scope": 1516,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1635,24 +2250,24 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2501,
+                        "id": 1513,
                         "name": "ElementaryTypeName",
-                        "src": "675:6:10"
+                        "src": "880:6:2"
                       }
                     ],
-                    "id": 2502,
+                    "id": 1514,
                     "name": "VariableDeclaration",
-                    "src": "675:21:10"
+                    "src": "880:21:2"
                   }
                 ],
-                "id": 2503,
+                "id": 1515,
                 "name": "ParameterList",
-                "src": "674:23:10"
+                "src": "879:23:2"
               }
             ],
-            "id": 2504,
+            "id": 1516,
             "name": "EventDefinition",
-            "src": "655:43:10"
+            "src": "860:43:2"
           },
           {
             "attributes": {
@@ -1668,7 +2283,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2514,
+                      "scope": 1526,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1681,21 +2296,21 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2505,
+                        "id": 1517,
                         "name": "ElementaryTypeName",
-                        "src": "791:6:10"
+                        "src": "996:6:2"
                       }
                     ],
-                    "id": 2506,
+                    "id": 1518,
                     "name": "VariableDeclaration",
-                    "src": "791:21:10"
+                    "src": "996:21:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "player",
-                      "scope": 2514,
+                      "scope": 1526,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1708,21 +2323,21 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2507,
+                        "id": 1519,
                         "name": "ElementaryTypeName",
-                        "src": "822:7:10"
+                        "src": "1027:7:2"
                       }
                     ],
-                    "id": 2508,
+                    "id": 1520,
                     "name": "VariableDeclaration",
-                    "src": "822:14:10"
+                    "src": "1027:14:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "card",
-                      "scope": 2514,
+                      "scope": 1526,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1735,21 +2350,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2509,
+                        "id": 1521,
                         "name": "ElementaryTypeName",
-                        "src": "846:7:10"
+                        "src": "1051:7:2"
                       }
                     ],
-                    "id": 2510,
+                    "id": 1522,
                     "name": "VariableDeclaration",
-                    "src": "846:12:10"
+                    "src": "1051:12:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "amount",
-                      "scope": 2514,
+                      "scope": 1526,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1762,24 +2377,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2511,
+                        "id": 1523,
                         "name": "ElementaryTypeName",
-                        "src": "868:7:10"
+                        "src": "1073:7:2"
                       }
                     ],
-                    "id": 2512,
+                    "id": 1524,
                     "name": "VariableDeclaration",
-                    "src": "868:14:10"
+                    "src": "1073:14:2"
                   }
                 ],
-                "id": 2513,
+                "id": 1525,
                 "name": "ParameterList",
-                "src": "781:107:10"
+                "src": "986:107:2"
               }
             ],
-            "id": 2514,
+            "id": 1526,
             "name": "EventDefinition",
-            "src": "765:124:10"
+            "src": "970:124:2"
           },
           {
             "attributes": {
@@ -1795,7 +2410,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2524,
+                      "scope": 1536,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1808,21 +2423,21 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2515,
+                        "id": 1527,
                         "name": "ElementaryTypeName",
-                        "src": "921:6:10"
+                        "src": "1126:6:2"
                       }
                     ],
-                    "id": 2516,
+                    "id": 1528,
                     "name": "VariableDeclaration",
-                    "src": "921:21:10"
+                    "src": "1126:21:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "player",
-                      "scope": 2524,
+                      "scope": 1536,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1835,21 +2450,21 @@
                           "name": "address",
                           "type": "address"
                         },
-                        "id": 2517,
+                        "id": 1529,
                         "name": "ElementaryTypeName",
-                        "src": "952:7:10"
+                        "src": "1157:7:2"
                       }
                     ],
-                    "id": 2518,
+                    "id": 1530,
                     "name": "VariableDeclaration",
-                    "src": "952:14:10"
+                    "src": "1157:14:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "key",
-                      "scope": 2524,
+                      "scope": 1536,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1862,21 +2477,21 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2519,
+                        "id": 1531,
                         "name": "ElementaryTypeName",
-                        "src": "976:7:10"
+                        "src": "1181:7:2"
                       }
                     ],
-                    "id": 2520,
+                    "id": 1532,
                     "name": "VariableDeclaration",
-                    "src": "976:11:10"
+                    "src": "1181:11:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "content",
-                      "scope": 2524,
+                      "scope": 1536,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1889,24 +2504,24 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2521,
+                        "id": 1533,
                         "name": "ElementaryTypeName",
-                        "src": "997:7:10"
+                        "src": "1202:7:2"
                       }
                     ],
-                    "id": 2522,
+                    "id": 1534,
                     "name": "VariableDeclaration",
-                    "src": "997:15:10"
+                    "src": "1202:15:2"
                   }
                 ],
-                "id": 2523,
+                "id": 1535,
                 "name": "ParameterList",
-                "src": "911:107:10"
+                "src": "1116:107:2"
               }
             ],
-            "id": 2524,
+            "id": 1536,
             "name": "EventDefinition",
-            "src": "895:124:10"
+            "src": "1100:124:2"
           },
           {
             "attributes": {
@@ -1922,7 +2537,7 @@
                       "constant": false,
                       "indexed": true,
                       "name": "gameId",
-                      "scope": 2530,
+                      "scope": 1542,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint64",
@@ -1935,21 +2550,21 @@
                           "name": "uint64",
                           "type": "uint64"
                         },
-                        "id": 2525,
+                        "id": 1537,
                         "name": "ElementaryTypeName",
-                        "src": "1044:6:10"
+                        "src": "1249:6:2"
                       }
                     ],
-                    "id": 2526,
+                    "id": 1538,
                     "name": "VariableDeclaration",
-                    "src": "1044:21:10"
+                    "src": "1249:21:2"
                   },
                   {
                     "attributes": {
                       "constant": false,
                       "indexed": false,
                       "name": "result",
-                      "scope": 2530,
+                      "scope": 1542,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "int8",
@@ -1962,24 +2577,24 @@
                           "name": "int8",
                           "type": "int8"
                         },
-                        "id": 2527,
+                        "id": 1539,
                         "name": "ElementaryTypeName",
-                        "src": "1067:4:10"
+                        "src": "1272:4:2"
                       }
                     ],
-                    "id": 2528,
+                    "id": 1540,
                     "name": "VariableDeclaration",
-                    "src": "1067:11:10"
+                    "src": "1272:11:2"
                   }
                 ],
-                "id": 2529,
+                "id": 1541,
                 "name": "ParameterList",
-                "src": "1043:36:10"
+                "src": "1248:36:2"
               }
             ],
-            "id": 2530,
+            "id": 1542,
             "name": "EventDefinition",
-            "src": "1025:55:10"
+            "src": "1230:55:2"
           },
           {
             "attributes": {
@@ -1993,7 +2608,7 @@
               ],
               "name": "setMaxLimit",
               "payable": false,
-              "scope": 2541,
+              "scope": 1568,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -2005,7 +2620,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "limit",
-                      "scope": 2535,
+                      "scope": 1547,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2018,19 +2633,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2531,
+                        "id": 1543,
                         "name": "ElementaryTypeName",
-                        "src": "1107:7:10"
+                        "src": "1312:7:2"
                       }
                     ],
-                    "id": 2532,
+                    "id": 1544,
                     "name": "VariableDeclaration",
-                    "src": "1107:13:10"
+                    "src": "1312:13:2"
                   }
                 ],
-                "id": 2533,
+                "id": 1545,
                 "name": "ParameterList",
-                "src": "1106:15:10"
+                "src": "1311:15:2"
               },
               {
                 "attributes": {
@@ -2039,14 +2654,14 @@
                   ]
                 },
                 "children": [],
-                "id": 2534,
+                "id": 1546,
                 "name": "ParameterList",
-                "src": "1130:0:10"
+                "src": "1335:0:2"
               }
             ],
-            "id": 2535,
+            "id": 1547,
             "name": "FunctionDefinition",
-            "src": "1086:45:10"
+            "src": "1291:45:2"
           },
           {
             "attributes": {
@@ -2060,7 +2675,7 @@
               ],
               "name": "setTimeoutLimit",
               "payable": false,
-              "scope": 2541,
+              "scope": 1568,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "external"
@@ -2072,7 +2687,7 @@
                     "attributes": {
                       "constant": false,
                       "name": "limit",
-                      "scope": 2540,
+                      "scope": 1552,
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2085,19 +2700,19 @@
                           "name": "uint256",
                           "type": "uint256"
                         },
-                        "id": 2536,
+                        "id": 1548,
                         "name": "ElementaryTypeName",
-                        "src": "1162:7:10"
+                        "src": "1367:7:2"
                       }
                     ],
-                    "id": 2537,
+                    "id": 1549,
                     "name": "VariableDeclaration",
-                    "src": "1162:13:10"
+                    "src": "1367:13:2"
                   }
                 ],
-                "id": 2538,
+                "id": 1550,
                 "name": "ParameterList",
-                "src": "1161:15:10"
+                "src": "1366:15:2"
               },
               {
                 "attributes": {
@@ -2106,32 +2721,229 @@
                   ]
                 },
                 "children": [],
-                "id": 2539,
+                "id": 1551,
                 "name": "ParameterList",
-                "src": "1185:0:10"
+                "src": "1390:0:2"
               }
             ],
-            "id": 2540,
+            "id": 1552,
             "name": "FunctionDefinition",
-            "src": "1137:49:10"
+            "src": "1342:49:2"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setMintConfig",
+              "payable": false,
+              "scope": 1568,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "starterMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1553,
+                        "name": "ElementaryTypeName",
+                        "src": "1429:7:2"
+                      }
+                    ],
+                    "id": 1554,
+                    "name": "VariableDeclaration",
+                    "src": "1429:19:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "staterLockMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1555,
+                        "name": "ElementaryTypeName",
+                        "src": "1458:7:2"
+                      }
+                    ],
+                    "id": 1556,
+                    "name": "VariableDeclaration",
+                    "src": "1458:22:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "playerLockMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1557,
+                        "name": "ElementaryTypeName",
+                        "src": "1490:7:2"
+                      }
+                    ],
+                    "id": 1558,
+                    "name": "VariableDeclaration",
+                    "src": "1490:22:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "winnerMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1559,
+                        "name": "ElementaryTypeName",
+                        "src": "1522:7:2"
+                      }
+                    ],
+                    "id": 1560,
+                    "name": "VariableDeclaration",
+                    "src": "1522:18:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "loserMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1561,
+                        "name": "ElementaryTypeName",
+                        "src": "1550:7:2"
+                      }
+                    ],
+                    "id": 1562,
+                    "name": "VariableDeclaration",
+                    "src": "1550:17:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "drawMint",
+                      "scope": 1567,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 1563,
+                        "name": "ElementaryTypeName",
+                        "src": "1577:7:2"
+                      }
+                    ],
+                    "id": 1564,
+                    "name": "VariableDeclaration",
+                    "src": "1577:16:2"
+                  }
+                ],
+                "id": 1565,
+                "name": "ParameterList",
+                "src": "1419:180:2"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1566,
+                "name": "ParameterList",
+                "src": "1608:0:2"
+              }
+            ],
+            "id": 1567,
+            "name": "FunctionDefinition",
+            "src": "1397:212:2"
           }
         ],
-        "id": 2541,
+        "id": 1568,
         "name": "ContractDefinition",
-        "src": "66:1122:10"
+        "src": "66:1545:2"
       }
     ],
-    "id": 2542,
+    "id": 1569,
     "name": "SourceUnit",
-    "src": "32:1157:10"
+    "src": "32:1580:2"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.25+commit.59dbf8f1.Linux.g++"
   },
   "networks": {},
-  "schemaVersion": "3.4.7",
-  "updatedAt": "2022-05-04T08:05:18.908Z",
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2022-06-15T07:00:22.874Z",
   "devdoc": {
     "methods": {}
   },

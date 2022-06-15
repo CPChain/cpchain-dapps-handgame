@@ -196,7 +196,7 @@ contract("Test Game ", (accounts) => {
         }
     })
 
-    // // test cancel 
+    // // test cancel
     it("should cancel game failed for owner ", async () => {
         try {
             const instance = await Game.deployed()
@@ -622,7 +622,7 @@ contract("Test Game ", (accounts) => {
     it(`should add ${win, lose} rps for  game 9`, async () => {
         const rps = await RPS.deployed()
         const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
-        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3])) 
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3]))
         assert.ok(b0 == 4 + creater + starter + win)
         assert.ok(b3 == 15 + player + lose)
     })
@@ -656,7 +656,7 @@ contract("Test Game ", (accounts) => {
     it(`should add ${win, lose} rps for  game 10`, async () => {
         const rps = await RPS.deployed()
         const b0 = web3.utils.fromWei(await rps.balanceOf(accounts[0]))
-        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3])) 
+        const b3 = web3.utils.fromWei(await rps.balanceOf(accounts[3]))
         assert.ok(b0 == 4 + creater + starter + win + creater + starter + draw)
         assert.ok(b3 == 15 + player + lose + player + draw)
     })
