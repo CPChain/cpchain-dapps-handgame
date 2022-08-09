@@ -1,0 +1,7 @@
+{
+    "markdown.marp.themes": [
+      "https://example.com/foo/bar/custom-theme.css",
+      "./themes/your-theme.css",
+      "./themes/cpc-theme.css"
+    ]
+  }
