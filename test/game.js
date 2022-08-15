@@ -661,6 +661,16 @@ contract("Test Game ", (accounts) => {
         assert.ok(b3 == 15 + player + lose + player + draw)
     })
 
+    it(`should change max limit and create failed`, async () => {
+        const instance = await Game.deployed()
+        await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(10)))
+        try {
+            const r = await instance.startGame(card11, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
+        } catch (error) {
+            assert.ok(error.toString().includes('Amount is too large'))
+        }
+
+    })
 
 })
 

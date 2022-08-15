@@ -173,6 +173,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         payable
         onlyEnabled
     {
+
         _createGame(proof, threshold);
     }
 
@@ -323,6 +324,7 @@ contract Game is IGame, IStarter, IPlayer, Enable, Verifiable {
         private
         returns (uint64)
     {
+        require(msg.value <= maxLimit, "Amount is too large");
         HandGame memory game = HandGame(
             totalGameNumber,
             msg.value,
