@@ -665,11 +665,19 @@ contract("Test Game ", (accounts) => {
         const instance = await Game.deployed()
         await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(10)))
         try {
-            const r = await instance.startGame(card11, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
+            await instance.startGame(card11, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
         } catch (error) {
             assert.ok(error.toString().includes('Amount is too large'))
-        }
 
+        }
+        await instance.setMaxLimit(web3.utils.toWei(new web3.utils.BN(1000)))
+        const r =  await instance.startGame(card11, web3.utils.toWei(new web3.utils.BN(5)), { from: accounts[0], value: web3.utils.toWei(new web3.utils.BN(50)) })
+        truffleAssert.eventEmitted(r, 'GameStarted', (ev) => {
+            return   ev[1] == accounts[0] &&
+                web3.utils.toHex(ev[2]) == card11 &&
+                web3.utils.fromWei(ev[3]) == 50 &&
+                web3.utils.fromWei(ev[4]) == 5
+        });
     })
 
 })
